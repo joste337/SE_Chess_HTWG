@@ -1,3 +1,5 @@
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.Cell
+
 case class Cell(x:Int, y:Int)
 
 val cell1 = Cell(4,5)
@@ -10,3 +12,9 @@ val field1 = Field(Array.ofDim[Cell](1))
 field1.cells(0)=cell1
 field1.cells(0).x
 field1.cells(0).y
+
+0 until 7
+List.fill(8)(0)
+val a: List[Int]= Nil
+1::a
+a
