@@ -24,10 +24,10 @@ class GridBaseImpl(var cells: Matrix[Cell]) extends GridInterface {
 
   // "Schöne" TUI output für das grid erzeugen
   override def toString: String = {
-    val upperBorder = ("+--" + "--" * BOARD_SIZE) + "-+\n"
-    val fillerLine = "|  " + "  " * BOARD_SIZE + " |\n"
-    val lowerBorder = ("+--" + "/-" * BOARD_SIZE) + "-+\n"
-    val line = ("_  " + ("x " * BOARD_SIZE)) + " |\n"
+    val upperBorder = ("+--" + "--" * BOARD_SIZE) + "--------+\n"
+    val fillerLine = "|  " + "  " * BOARD_SIZE + "        |\n"
+    val lowerBorder = ("+  " + "/" * (BOARD_SIZE)) + "+\n"  //"+--" "/--" u0336
+    val line = ("_  " + ("x " * BOARD_SIZE)) + "  |\n"
     var box = "\n" + (upperBorder + fillerLine + (line * BOARD_SIZE)) + fillerLine + lowerBorder
 
     for {
