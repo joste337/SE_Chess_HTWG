@@ -13,8 +13,10 @@ class GridBaseImpl(var cells: Matrix[Cell]) extends GridInterface {
 
   def getCell(row: Int, col: Int): Cell = cells.cell(row, col)
   def setCells(cells: Matrix[Cell]): Unit = this.cells = cells
-  def replaceColor(row: Int, col: Int, isWhite: Boolean): Matrix[Cell] = cells.replaceCell(row, col, Cell(getCell(row, col).value, isWhite))
-  def replaceValue(row: Int, col: Int, value: Option[Piece]): Matrix[Cell] = cells.replaceCell(row, col, Cell(value, getCell(row, col).isWhite))
+  def replaceColor(row: Int, col: Int, isWhite: Boolean): Matrix[Cell]
+    = cells.replaceCell(row, col, Cell(getCell(row, col).value, isWhite))
+  def replaceValue(row: Int, col: Int, value: Option[Piece]): Matrix[Cell]
+    = cells.replaceCell(row, col, Cell(value, getCell(row, col).isWhite))
 
   override def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): Boolean = {
     mover.movePiece(fromRow, fromCol, toRow, toCol)
@@ -31,7 +33,8 @@ class GridBaseImpl(var cells: Matrix[Cell]) extends GridInterface {
     for {
       row <- (0 until BOARD_SIZE).reverse
       col <- 0 until BOARD_SIZE
-    } box = box.replaceFirst("x", getCell(row, col).toString).replaceFirst("_", abs(col - 8).toString).replaceFirst("/", matchColToLetter(col))
+    } box = box.replaceFirst("x", getCell(row, col).toString)
+        .replaceFirst("_", abs(col - 8).toString).replaceFirst("/", matchColToLetter(col))
     box
   }
 
