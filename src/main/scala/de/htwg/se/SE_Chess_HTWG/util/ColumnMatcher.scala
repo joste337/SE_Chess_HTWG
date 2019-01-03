@@ -6,14 +6,14 @@ object ColumnMatcher {
   // Hilfsmethode um die Randannotationen am Brett zu setzen
   def matchColToLetter(number: Int): String = {
     number match {
-      case 0 => "a"
-      case 1 => "b"
-      case 2 => "c"
-      case 3 => "d"
-      case 4 => "e"
-      case 5 => "f"
-      case 6 => "g"
-      case 7 => "h"
+      case 0 => "a  "  //a
+      case 1 => "b  "
+      case 2 => "c  "
+      case 3 => "d  "
+      case 4 => "e  "
+      case 5 => "f  "
+      case 6 => "g  "
+      case 7 => "h  "
     }
   }
 

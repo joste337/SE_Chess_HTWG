@@ -13,7 +13,7 @@ object SE_Chess_HTWG {
     var input: String = ""
 
     do {
-      input = readLine()
+      input = readLine() //is deprecated
       tui.processInputLine(input)
     } while (input != "q")
   }
