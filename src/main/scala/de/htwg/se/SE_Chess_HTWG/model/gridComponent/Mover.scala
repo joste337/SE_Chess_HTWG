@@ -41,21 +41,16 @@ class Mover(grid: GridInterface) {
     val leftDirectionalCell: Cell = if (col - 1 > 0 ) grid.getCell(nextRow, col - 1) else Cell(None, true)
     val rightDirectionalCell: Cell = if (col + 1 < 8) grid.getCell(nextRow, col + 1) else Cell(None, true)
 
-    if (!grid.getCell(nextRow, col).isSet) possibleMovementOptionsList
-        = grid.getCell(nextRow, col)::possibleMovementOptionsList
-    if (leftDirectionalCell.isSet && leftDirectionalCell.isWhite != isWhite) possibleMovementOptionsList
-        = leftDirectionalCell::possibleMovementOptionsList
-    if (rightDirectionalCell.isSet && rightDirectionalCell.isWhite != isWhite) possibleMovementOptionsList
-        = rightDirectionalCell::possibleMovementOptionsList
+    if (!grid.getCell(nextRow, col).isSet) possibleMovementOptionsList = grid.getCell(nextRow, col)::possibleMovementOptionsList
+    if (leftDirectionalCell.isSet && leftDirectionalCell.isWhite != isWhite) possibleMovementOptionsList = leftDirectionalCell::possibleMovementOptionsList
+    if (rightDirectionalCell.isSet && rightDirectionalCell.isWhite != isWhite) possibleMovementOptionsList = rightDirectionalCell::possibleMovementOptionsList
 
     possibleMovementOptionsList
   }
 
   def getPossibleMovementOptionsForRook(row: Int, col: Int, isWhite: Boolean): List[Cell] = {
-    getMovementOptionsForRange(((row + 1) until 8).toList, List.fill(8)(col), isWhite):::
-      getMovementOptionsForRange(List.fill(8)(row),(0 until (col - 1)).reverse.toList, isWhite):::
-      getMovementOptionsForRange((0 until (row - 1)).reverse.toList, List.fill(8)(col), isWhite):::
-      getMovementOptionsForRange(List.fill(8)(row), (0 until (col - 1)).reverse.toList, isWhite)
+    getMovementOptionsForRange(((row + 1) until 8).toList, List.fill(8)(col), isWhite):::getMovementOptionsForRange(List.fill(8)(row), (0 until (col - 1)).reverse.toList, isWhite):::
+      getMovementOptionsForRange((0 until (row - 1)).reverse.toList, List.fill(8)(col), isWhite):::getMovementOptionsForRange(List.fill(8)(row), (0 until (col - 1)).reverse.toList, isWhite)
   }
 
   def getPossibleMovementOptionsForKnight(row: Int, col: Int, isWhite: Boolean): List[Cell] = {
@@ -66,8 +61,7 @@ class Mover(grid: GridInterface) {
     for(i <- 0 until targetRows.size) {
       val targetRow = targetRows(i)
       val targetCol = targetCols(i)
-      if (!(targetRow < 0 || targetRow > 7 || targetCol < 0 || targetCol > 7)) possibleMovementOptionsList =
-        grid.getCell(targetRow, targetCol)::possibleMovementOptionsList
+      if (!(targetRow < 0 || targetRow > 7 || targetCol < 0 || targetCol > 7)) possibleMovementOptionsList = grid.getCell(targetRow, targetCol)::possibleMovementOptionsList
     }
 
     possibleMovementOptionsList.toStream.filter(cell => cell.isSet && cell.isWhite == isWhite)
@@ -75,10 +69,8 @@ class Mover(grid: GridInterface) {
   }
 
   def getPossibleMovementOptionsForBishop(row: Int, col: Int, isWhite: Boolean): List[Cell] = {
-    getMovementOptionsForRange(((row + 1) until 8).toList, ((col + 1) until 8).toList, isWhite):::
-      getMovementOptionsForRange(((row + 1) until 8).toList, (0 until (col - 1)).reverse.toList, isWhite):::
-      getMovementOptionsForRange((0 until (row - 1)).reverse.toList, ((col + 1) until 8).toList, isWhite):::
-      getMovementOptionsForRange((0 until (row - 1)).reverse.toList, (0 until (col - 1)).reverse.toList, isWhite)
+    getMovementOptionsForRange(((row + 1) until 8).toList, ((col + 1) until 8).toList, isWhite):::getMovementOptionsForRange(((row + 1) until 8).toList, (0 until (col - 1)).reverse.toList, isWhite):::
+      getMovementOptionsForRange((0 until (row - 1)).reverse.toList, ((col + 1) until 8).toList, isWhite):::getMovementOptionsForRange((0 until (row - 1)).reverse.toList, (0 until (col - 1)).reverse.toList, isWhite)
   }
 
   def getPossibleMovementOptionsForQueen(row: Int, col: Int, isWhite: Boolean): List[Cell] = {
@@ -93,8 +85,7 @@ class Mover(grid: GridInterface) {
     for(i <- 0 until targetRows.size) {
       val targetRow = targetRows(i)
       val targetCol = targetCols(i)
-      if (!(targetRow < 0 || targetRow > 7 || targetCol < 0 || targetCol > 7)) possibleMovementOptionsList =
-        grid.getCell(targetRow, targetCol)::possibleMovementOptionsList
+      if (!(targetRow < 0 || targetRow > 7 || targetCol < 0 || targetCol > 7)) possibleMovementOptionsList = grid.getCell(targetRow, targetCol)::possibleMovementOptionsList
     }
 
     possibleMovementOptionsList.toStream.filter(cell => cell.isSet && cell.isWhite == isWhite)
