@@ -20,7 +20,7 @@ class GridBaseImpl(var cells: Matrix[Cell]) extends GridInterface {
     mover.movePiece(fromRow, fromCol, toRow, toCol)
   }
 
-  // "Schöner TUI output für das grid erzeugen
+  // "Schöne" TUI output für das grid erzeugen
   override def toString: String = {
     val upperBorder = ("+--" + "--" * BOARD_SIZE) + "-+\n"
     val fillerLine = "|  " + "  " * BOARD_SIZE + " |\n"

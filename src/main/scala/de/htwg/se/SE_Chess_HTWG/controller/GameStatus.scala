@@ -6,8 +6,8 @@ object GameStatus extends Enumeration {
 
   val gameStatusToString = Map[GameStatus, String](
     IDLE -> "",
-    PLAYER1TURN -> "First player's turn",
-    PLAYER2TURN -> "Second player's turn"
+    PLAYER1TURN -> "First(white) player's turn",
+    PLAYER2TURN -> "Second(black) player's turn"
   )
 
   def message(gameStatus: GameStatus): String = {
