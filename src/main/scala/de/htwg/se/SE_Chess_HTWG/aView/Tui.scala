@@ -1,7 +1,7 @@
 package de.htwg.se.SE_Chess_HTWG.aView
 
 import de.htwg.se.SE_Chess_HTWG.controller.{CellChanged, ControllerInterface, GameStatus}
-import de.htwg.se.SE_Chess_HTWG.util.ColumnMatcher
+import de.htwg.se.SE_Chess_HTWG.util.{ColumnMatcher, MovementResult}
 
 import scala.swing.Reactor
 
@@ -21,7 +21,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
           val fromCol: Int = ColumnMatcher.matchLetterToCol(input.split(" ")(1).substring(0, 1))
           val toRow: Int = input.split(" ")(2).substring(1, 2).toInt - 1
           val toCol: Int = ColumnMatcher.matchLetterToCol(input.split(" ")(2).substring(0, 1))
-          if (!controller.movePiece(fromRow, fromCol, toRow, toCol)) println("Not a valid move.")
+          println(MovementResult.message(controller.movePiece(fromRow, fromCol, toRow, toCol)))
         }
       }
       case _ => printTui

@@ -1,6 +1,6 @@
 package de.htwg.se.SE_Chess_HTWG.model.gridComponent
 
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.pieceComponent.Piece
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.Piece
 
 case class Cell(var value: Option[Piece], isWhite:Boolean, isHighlighted: Boolean = false) extends CellInterface {
   def isSet: Boolean = value.isDefined

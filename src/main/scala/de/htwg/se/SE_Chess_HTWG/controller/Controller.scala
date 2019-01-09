@@ -2,6 +2,9 @@ package de.htwg.se.SE_Chess_HTWG.controller
 
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus.GameStatus
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
+import de.htwg.se.SE_Chess_HTWG.model.movement.Move
+import de.htwg.se.SE_Chess_HTWG.util.MovementResult
+import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 import scala.swing.Publisher
 
@@ -16,20 +19,32 @@ class Controller (var grid: GridInterface) extends ControllerInterface with Publ
     publish(new CellChanged)
   }
 
-  override def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): Boolean = {
+  override def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult = {
+    val move: Move = new Move(grid, fromRow, fromCol, toRow, toCol)
+
+    val movementResult: MovementResult =
+      if (move.isInGrid && pieceColorMatchesTurnColor(fromRow, fromCol)) {
+        grid.movePiece(move)
+      } else {
+        MovementResult.ERROR
+      }
+
+    movementResult match {
+      case MovementResult.SUCCESS => {
+        gameStatus = GameStatus.nextPlayer(gameStatus)
+        publish(new CellChanged)
+      }
+      case _ =>
+    }
+    movementResult
+  }
+
+  def pieceColorMatchesTurnColor(fromRow: Int, fromCol: Int): Boolean = {
     val fromCell = grid.getCell(fromRow, fromCol)
     gameStatus match {
-      case GameStatus.PLAYER1TURN => if (!(fromCell.isSet && fromCell.value.get.isWhite)) return false
-      case GameStatus.PLAYER2TURN => if (!(fromCell.isSet && !fromCell.value.get.isWhite)) return false
-    }
-
-    if (grid.movePiece(fromRow, fromCol, toRow, toCol)) {
-      gameStatus = GameStatus.nextPlayer(gameStatus)
-      publish(new CellChanged)
-      true
-    } else {
-      println("move false")
-      false
+      case GameStatus.PLAYER1TURN => if (fromCell.isSet && fromCell.value.get.isWhite) true else false
+      case GameStatus.PLAYER2TURN => if (fromCell.isSet && !fromCell.value.get.isWhite) true else false
+      case _ => false
     }
   }
 }
