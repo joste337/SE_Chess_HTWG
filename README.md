@@ -1,3 +1,6 @@
+[![Travis](https://travis-ci.org/JeSuisUneLicorne/SE_Chess_HTWG.svg?branch=master)]()
+[![Coverage Status](https://coveralls.io/repos/github/JeSuisUneLicorne/SE_Chess_HTWG/badge.svg?branch=master)](https://coveralls.io/github/JeSuisUneLicorne/SE_Chess_HTWG?branch=master)
+
 # Htwg Scala Seed Project 
 =====================================================
 ## the easiest way to start a project for the lecture SE
