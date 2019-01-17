@@ -11,6 +11,7 @@ import scala.swing.Publisher
 class Controller (var grid: GridInterface) extends ControllerInterface with Publisher {
 
   var gameStatus: GameStatus = GameStatus.IDLE
+  var currentPlayerTurn: GameStatus = GameStatus.IDLE
   override def gridToString: String = grid.toString
 
   override def createNewGrid: Unit = {
@@ -31,7 +32,31 @@ class Controller (var grid: GridInterface) extends ControllerInterface with Publ
 
     movementResult match {
       case MovementResult.SUCCESS => {
-        gameStatus = GameStatus.nextPlayer(gameStatus)
+        gameStatus = GameStatus.nextPlayer(currentPlayerTurn)
+        currentPlayerTurn = gameStatus
+        publish(new CellChanged)
+      }
+      case MovementResult.PROMOTION => {
+        gameStatus = GameStatus.PROMOTION
+        publish(new CellChanged)
+      }
+      case _ =>
+    }
+    movementResult
+  }
+
+  def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {
+    val movementResult: MovementResult =
+      if (gameStatus == GameStatus.PROMOTION) {
+        grid.promotePiece(row, col, pieceShortcut)
+      } else  {
+        MovementResult.ERROR
+      }
+
+    movementResult match {
+      case MovementResult.SUCCESS => {
+        gameStatus = GameStatus.nextPlayer(currentPlayerTurn)
+        currentPlayerTurn = gameStatus
         publish(new CellChanged)
       }
       case _ =>

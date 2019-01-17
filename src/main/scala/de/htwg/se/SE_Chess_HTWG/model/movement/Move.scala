@@ -21,6 +21,7 @@ class Move(val grid: GridInterface, val fromRow:Int, val fromCol: Int, val toRow
       fromCell.value.get.hasMoved = true
       fromCell.value.get.row = toRow
       fromCell.value.get.col = toCol
+      grid.enPassantSquare = None
       MovementResult.SUCCESS
   }
 }
