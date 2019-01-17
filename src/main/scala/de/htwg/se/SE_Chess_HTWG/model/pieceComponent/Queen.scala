@@ -13,13 +13,18 @@ case class Queen(override val isWhite: Boolean, override var row: Int, override 
   }
 
   def getPossibleSquares(grid: GridInterface): List[Cell] = {
-    MovementHelper.getSquaresUntilColliding(grid, (row + 1 until 8).toList zip List.fill(8)(col), isWhite):::
-      MovementHelper.getSquaresUntilColliding(grid, List.fill(8)(row) zip (0 until (col - 1)), isWhite):::
-      MovementHelper.getSquaresUntilColliding(grid, (0 until (row - 1)).reverse.toList zip List.fill(8)(col), isWhite):::
-      MovementHelper.getSquaresUntilColliding(grid, List.fill(8)(row) zip (0 until (col - 1)).reverse.toList, isWhite):::
-      MovementHelper.getSquaresUntilColliding(grid, ((row + 1) until 8).toList zip ((col + 1) until 8).toList, isWhite):::
-      MovementHelper.getSquaresUntilColliding(grid, ((row + 1) until 8).toList zip (0 until (col - 1)).reverse.toList, isWhite):::
-      MovementHelper.getSquaresUntilColliding(grid, (0 until (row - 1)).reverse.toList zip ((col + 1) until 8).toList, isWhite):::
-      MovementHelper.getSquaresUntilColliding(grid, (0 until (row - 1)).reverse.toList zip (0 until (col - 1)).reverse.toList, isWhite)
+    val rowsToEighthRow = ((row + 1) until 8).toList
+    val colsToEightCol = ((col + 1) until 8).toList
+    val rowsToFirstRow = (0 until (row - 1)).reverse.toList
+    val colsToFirstRow = (0 until (col - 1)).reverse.toList
+
+    MovementHelper.getSquaresUntilColliding(grid, (rowsToEighthRow zip colsToEightCol), isWhite):::
+      MovementHelper.getSquaresUntilColliding(grid, (rowsToEighthRow zip colsToFirstRow), isWhite):::
+      MovementHelper.getSquaresUntilColliding(grid, (rowsToFirstRow zip colsToEightCol), isWhite):::
+      MovementHelper.getSquaresUntilColliding(grid, (rowsToFirstRow zip colsToFirstRow), isWhite):::
+      MovementHelper.getSquaresUntilColliding(grid, (rowsToEighthRow zip List.fill(8)(col)), isWhite):::
+      MovementHelper.getSquaresUntilColliding(grid, (List.fill(8)(row) zip colsToFirstRow), isWhite):::
+      MovementHelper.getSquaresUntilColliding(grid, (rowsToFirstRow zip List.fill(8)(col)), isWhite):::
+      MovementHelper.getSquaresUntilColliding(grid, (List.fill(8)(row) zip colsToEightCol), isWhite)
   }
 }
