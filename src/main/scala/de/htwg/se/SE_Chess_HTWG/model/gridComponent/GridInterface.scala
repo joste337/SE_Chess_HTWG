@@ -7,11 +7,12 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 trait GridInterface {
   var enPassantSquare: Option[Cell]
   var promotionSquare: Option[Cell]
-  def createNewGrid: GridInterface
   def getCell(row: Int, col: Int): Cell
-  def replaceValue(row: Int, col: Int, value: Option[Piece]): Matrix[Cell]
-  def setCells(cells: Matrix[Cell]): Unit
+  def setCells(cells: Matrix): Unit
+  def replaceColor(row: Int, col: Int, isWhite: Boolean): Matrix
+  def replaceValue(row: Int, col: Int, value: Option[Piece]): Matrix
   def movePiece(move: Move): MovementResult
+  def createNewGrid: GridInterface
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
 }
 
