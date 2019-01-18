@@ -2,12 +2,13 @@ package de.htwg.se.SE_Chess_HTWG.controller
 
 object GameStatus extends Enumeration {
   type GameStatus = Value
-  val IDLE, PLAYER1TURN, PLAYER2TURN = Value
+  val IDLE, PLAYER1TURN, PLAYER2TURN, PROMOTION = Value
 
   val gameStatusToString = Map[GameStatus, String](
     IDLE -> "",
-    PLAYER1TURN -> "First(white) player's turn",
-    PLAYER2TURN -> "Second(black) player's turn"
+    PLAYER1TURN -> "First player's turn",
+    PLAYER2TURN -> "Second player's turn",
+    PROMOTION -> "Promotion needs to be done"
   )
 
   def message(gameStatus: GameStatus): String = {

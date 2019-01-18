@@ -1,6 +1,6 @@
 package de.htwg.se.SE_Chess_HTWG.util
 
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.pieceComponent._
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent._
 
 object ColumnMatcher {
   // Hilfsmethode um die Randannotationen am Brett zu setzen
@@ -31,16 +31,16 @@ object ColumnMatcher {
   }
 
   // Hilfsmethode um die richtige Figur in der jeweiligen Spalte zu setzen
-  def matchColToPiece(col: Int, isWhite: Boolean): Piece = {
+  def matchColToPiece(row: Int, col: Int, isWhite: Boolean): Piece = {
     col match {
-      case 0 => Rook(isWhite)
-      case 1 => Knight(isWhite)
-      case 2 => Bishop(isWhite)
-      case 3 => if (isWhite) Queen(isWhite) else King(isWhite)
-      case 4 => if (isWhite) new King(isWhite) else Queen(isWhite)
-      case 5 => Bishop(isWhite)
-      case 6 => Knight(isWhite)
-      case 7 => Rook(isWhite)
+      case 0 => Rook(isWhite, row, col)
+      case 1 => Knight(isWhite, row, col)
+      case 2 => Bishop(isWhite, row, col)
+      case 3 => if (isWhite) Queen(isWhite, row, col) else King(isWhite, row, col)
+      case 4 => if (isWhite) new King(isWhite, row, col) else Queen(isWhite, row, col)
+      case 5 => Bishop(isWhite, row, col)
+      case 6 => Knight(isWhite, row, col)
+      case 7 => Rook(isWhite, row, col)
     }
   }
 }
