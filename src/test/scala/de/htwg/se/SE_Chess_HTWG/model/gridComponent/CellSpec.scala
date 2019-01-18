@@ -16,7 +16,7 @@ class CellSpec extends WordSpec with Matchers {
       cell.isWhite should be(true)
     }
     "have the right string representation of the square" in {
-      cell.toString should be("w")
+      cell.toString should be("\u25af")
     }
   }}
 
@@ -29,7 +29,7 @@ class CellSpec extends WordSpec with Matchers {
       cell.isWhite should be(false)
     }
     "have the right string representation of the square" in {
-      cell.toString should be("b")
+      cell.toString should be("\u25ae")
     }
   }}
 
@@ -42,7 +42,7 @@ class CellSpec extends WordSpec with Matchers {
       cell.isWhite should be(false)
     }
     "have the right string representation of the piece" in {
-      cell.toString should be("R")
+      cell.toString should be("\u265C")
     }
   }}
 }
