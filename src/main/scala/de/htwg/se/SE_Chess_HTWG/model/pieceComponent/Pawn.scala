@@ -6,7 +6,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 case class Pawn(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends Piece {
-  override def toString: String = "P"
+  override def toString: String = if (isWhite) "\u265F" else "\u2659"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
     if (getEnPassantMove(grid) == move.getToCell) {

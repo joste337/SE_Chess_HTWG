@@ -6,7 +6,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 case class Bishop(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends Piece {
-  override def toString: String = "B"
+  override def toString: String = if (isWhite) "\u265D" else "\u2657"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
     if (getPossibleSquares(grid) contains move.getToCell) move.doMove() else MovementResult.ERROR
