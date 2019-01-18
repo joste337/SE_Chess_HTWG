@@ -1,6 +1,8 @@
 package de.htwg.se.SE_Chess_HTWG.testUtil
 
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridBaseImpl, GridInterface, Matrix}
+import com.google.inject.Guice
+import de.htwg.se.SE_Chess_HTWG.ChessModule
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridImpl, GridInterface, Matrix}
 import de.htwg.se.SE_Chess_HTWG.model.pieceComponent._
 
 object TestGrid {
@@ -15,9 +17,11 @@ object TestGrid {
       P b w b w b w Q
       b w b w b w b w
   */
+  val injector = Guice.createInjector(new ChessModule)
+  val grid = injector.getInstance(classOf[GridInterface])
+
   def getTestGrid: GridInterface = {
-    val grid: GridInterface = new GridBaseImpl
-    var cells = new Matrix[Cell](Cell(None, false))
+    var cells: Matrix = new Matrix
     for {
       row <- 0 until 8
       col <- 0 until 8
@@ -30,6 +34,7 @@ object TestGrid {
     grid.setCells(grid.replaceValue(3, 5, Some(King(true, 3, 5, true))))
     grid.setCells(grid.replaceValue(6, 1, Some(Bishop(true, 6, 1, true))))
     grid.setCells(grid.replaceValue(5, 3, Some(Knight(true, 5, 3, true))))
+
     grid
   }
 }

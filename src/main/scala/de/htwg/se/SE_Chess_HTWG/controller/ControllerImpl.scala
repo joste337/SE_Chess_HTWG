@@ -1,6 +1,8 @@
 package de.htwg.se.SE_Chess_HTWG.controller
 
-import de.htwg.se.SE_Chess_HTWG.controller.GameStatus.GameStatus
+import com.google.inject.{Guice, Inject}
+import de.htwg.se.SE_Chess_HTWG.ChessModule
+import de.htwg.se.SE_Chess_HTWG.controller.GameStatus._
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
 import de.htwg.se.SE_Chess_HTWG.model.movement.Move
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
@@ -8,15 +10,18 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 import scala.swing.Publisher
 
-class Controller (var grid: GridInterface) extends ControllerInterface with Publisher {
+class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInterface with Publisher {
 
-  var gameStatus: GameStatus = GameStatus.IDLE
-  var currentPlayerTurn: GameStatus = GameStatus.IDLE
+  val injector = Guice.createInjector(new ChessModule)
+  var gameStatus: GameStatus = IDLE
+  var currentPlayerTurn: GameStatus = IDLE
+
   override def gridToString: String = grid.toString
 
   override def createNewGrid: Unit = {
     grid = grid.createNewGrid
     gameStatus = GameStatus.PLAYER1TURN
+    currentPlayerTurn = GameStatus.PLAYER1TURN
     publish(new CellChanged)
   }
 

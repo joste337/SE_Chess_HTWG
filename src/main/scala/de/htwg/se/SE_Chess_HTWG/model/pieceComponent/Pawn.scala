@@ -40,7 +40,7 @@ case class Pawn(override val isWhite: Boolean, override var row: Int, override v
 
   def getPromotionMove(grid: GridInterface): Cell = {
     val endRow = if (isWhite) 7 else 0
-    if (getBaseSquares(grid).value.get.row == endRow) getBaseSquares(grid) else null
+    if (getBaseSquares(grid).value.getOrElse(10) == endRow) getBaseSquares(grid) else null
   }
 
   def getEnPassantMove(grid: GridInterface): Cell = {

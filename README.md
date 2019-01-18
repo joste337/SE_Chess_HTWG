@@ -1,6 +1,12 @@
 [![Travis](https://travis-ci.org/JeSuisUneLicorne/SE_Chess_HTWG.svg?branch=master)]()
 [![Coverage Status](https://coveralls.io/repos/github/JeSuisUneLicorne/SE_Chess_HTWG/badge.svg?branch=master)](https://coveralls.io/github/JeSuisUneLicorne/SE_Chess_HTWG?branch=master)
 
+## Build and start the docker container:
+```
+docker build -t chess .
+docker run -p 4000:80 chess
+```
+
 # Htwg Scala Seed Project 
 =====================================================
 ## the easiest way to start a project for the lecture SE
