@@ -1,17 +1,13 @@
 package de.htwg.se.SE_Chess_HTWG.model.fileIOComponent
 
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{CellInterface, GridInterface}
-import play.api.libs.json.{JsNumber, JsValue, Json, Writes}
-import java.io._
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
 
 import com.google.inject.Guice
-import com.google.inject.name.Names
 import de.htwg.se.SE_Chess_HTWG.ChessModule
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus.GameStatus
 import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.Piece
 
-import scala.io.Source
 import scala.xml.PrettyPrinter
 
 class FileIOXmlImpl extends FileIOInterface {
