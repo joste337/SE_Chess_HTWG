@@ -77,4 +77,6 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
       case _ => false
     }
   }
+
+  def cell(row:Int, col:Int) = grid.getCell(row, col)
 }

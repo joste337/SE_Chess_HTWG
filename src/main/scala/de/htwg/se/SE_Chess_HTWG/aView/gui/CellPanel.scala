@@ -26,7 +26,7 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
     contents += label
     preferredSize = new Dimension(75, 75) // 600 framesize / 8 cells
 
-    background = if (controller.cellIsWhite else cellIsBlack
+    //background = if (controller.cellIsWhite else cellIsBlack
 
 
     border = LineBorder(java.awt.Color.BLACK, 5)

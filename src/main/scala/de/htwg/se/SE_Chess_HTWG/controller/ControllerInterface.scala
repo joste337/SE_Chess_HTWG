@@ -14,6 +14,7 @@ trait ControllerInterface extends Publisher {
   def createNewGrid: Unit
   def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
+  def cell(row:Int, col:Int)
   var grid: GridInterface
 }
 
