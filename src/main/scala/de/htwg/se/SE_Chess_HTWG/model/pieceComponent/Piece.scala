@@ -25,4 +25,16 @@ object Piece {
       "hasMoved" -> piece.hasMoved
     )
   }
+
+  def createPieceFromSimpleString(simpleString: String, isWhite: Boolean, row: Int, col: Int, hasMoved: Boolean): Option[Piece] = {
+    simpleString match {
+      case "P" => Some(Pawn(isWhite, row, col, hasMoved))
+      case "R" => Some(Rook(isWhite, row, col, hasMoved))
+      case "N" => Some(Knight(isWhite, row, col, hasMoved))
+      case "B" => Some(Bishop(isWhite, row, col, hasMoved))
+      case "K" => Some(King(isWhite, row, col, hasMoved))
+      case "Q" => Some(Queen(isWhite, row, col, hasMoved))
+      case _ => None
+    }
+  }
 }

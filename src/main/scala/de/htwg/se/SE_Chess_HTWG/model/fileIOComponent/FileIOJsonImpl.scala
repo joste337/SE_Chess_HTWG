@@ -36,14 +36,7 @@ class FileIOJsonImpl extends FileIOInterface {
       val value = (json \\ "value") (i).as[String]
       val isWhite = (json \\ "isWhite") (i).as[Boolean]
       val hasMoved = (json \\ "hasMoved") (i).as[Boolean]
-      grid.getCell(row, col).value = value match {
-        case "P" => Some(Pawn(isWhite, row, col, hasMoved))
-        case "R" => Some(Rook(isWhite, row, col, hasMoved))
-        case "N" => Some(Knight(isWhite, row, col, hasMoved))
-        case "B" => Some(Bishop(isWhite, row, col, hasMoved))
-        case "K" => Some(King(isWhite, row, col, hasMoved))
-        case "Q" => Some(Queen(isWhite, row, col, hasMoved))
-      }
+      grid.getCell(row, col).value = Piece.createPieceFromSimpleString(value, isWhite, row, col, hasMoved)
     }
 
     (grid, gameStatus)

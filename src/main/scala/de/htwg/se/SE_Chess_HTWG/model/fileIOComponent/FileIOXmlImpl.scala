@@ -1,20 +1,62 @@
 package de.htwg.se.SE_Chess_HTWG.model.fileIOComponent
 
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{CellInterface, GridInterface}
-import play.api.libs.json.{JsNumber, Json, Writes}
+import play.api.libs.json.{JsNumber, JsValue, Json, Writes}
 import java.io._
 
+import com.google.inject.Guice
+import com.google.inject.name.Names
+import de.htwg.se.SE_Chess_HTWG.ChessModule
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus.GameStatus
 import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.Piece
 
-class FileIOXmlImpl extends FileIOInterface {
-  override def save(grid: GridInterface, gameStatus: GameStatus): Unit = {
+import scala.io.Source
+import scala.xml.PrettyPrinter
 
+class FileIOXmlImpl extends FileIOInterface {
+  val FILE_NAME: String = "game.xml"
+
+  override def save(grid: GridInterface, gameStatus: GameStatus): Unit = {
+    import java.io._
+    val pw = new PrintWriter(new File(FILE_NAME ))
+    val prettyPrinter = new PrettyPrinter(120,4)
+    val xml = prettyPrinter.format(gridToXml(grid, gameStatus))
+    pw.write(xml)
+    pw.close
   }
 
   override def load: (GridInterface, GameStatus) = {
-    (null, null)
+    val source = scala.xml.XML.loadFile(FILE_NAME)
+    val gameStatus = GameStatus.fromInputString((source \\ "game" \ "@status").text)
+    val injector = Guice.createInjector(new ChessModule)
+    var grid = injector.getInstance(classOf[GridInterface])
+    grid = grid.createNewGridWithoutPieces
+
+    val pieces = (source \\ "piece")
+    for (piece <- pieces) {
+      val row: Int = (piece \ "@row").text.toInt
+      val col: Int = (piece \ "@col").text.toInt
+      val value: String = piece.text.trim
+      val isWhite: Boolean = (piece \ "@isWhite").text.toBoolean
+      val hasMoved: Boolean = (piece \ "@hasMoved").text.toBoolean
+      grid.getCell(row, col).value = Piece.createPieceFromSimpleString(value, isWhite, row, col, hasMoved)
+    }
+
+    (grid, gameStatus)
   }
 
+  def gridToXml(grid: GridInterface, gameStatus: GameStatus) = {
+    <game status ={GameStatus.toOutputString(gameStatus)}>
+      {
+      grid.getSetCells.map(cell => pieceToXml(cell.value.get))
+      }
+    </game>
+  }
+
+  def pieceToXml(piece: Piece) = {
+    <piece row ={piece.row.toString} col={piece.col.toString} isWhite={piece.isWhite.toString} hasMoved={piece.hasMoved.toString}>
+      {piece.toSimpleString}
+    </piece>
+  }
 }
