@@ -15,7 +15,6 @@ class SwingGui (controller: ControllerInterface) extends Frame  {
 
   listenTo(controller)
   title = "SE Chess HTWG"
-  var set = 0
 
   menuBar = new MenuBar {
     contents += new Menu("File") {
@@ -38,7 +37,6 @@ class SwingGui (controller: ControllerInterface) extends Frame  {
 
   val textArea = new TextArea()  //for testing gridtostring
 
-
   contents = new GridPanel(8,8) {
     contents += new TextField(controller.gridToString)
   }
@@ -52,7 +50,7 @@ class SwingGui (controller: ControllerInterface) extends Frame  {
 
 
 
-  //size = new Dimension(600, 600)
+  size = new Dimension(600, 600)
   centerOnScreen()
   this.visible = true
 
