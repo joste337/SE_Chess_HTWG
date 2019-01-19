@@ -14,6 +14,9 @@ import scala.io.Source
 class FileIOJsonImpl extends FileIOInterface {
   val FILE_NAME: String = "game.json"
 
+  val injector = Guice.createInjector(new ChessModule)
+  val pieceFactory: PieceFactory = injector.getInstance(classOf[PieceFactory])
+
   override def save(grid: GridInterface, gameStatus: GameStatus): Unit = {
     import java.io._
     val pw = new PrintWriter(new File(FILE_NAME))
@@ -36,7 +39,7 @@ class FileIOJsonImpl extends FileIOInterface {
       val value = (json \\ "value") (i).as[String]
       val isWhite = (json \\ "isWhite") (i).as[Boolean]
       val hasMoved = (json \\ "hasMoved") (i).as[Boolean]
-      grid.getCell(row, col).value = Piece.createPieceFromSimpleString(value, isWhite, row, col, hasMoved)
+      grid.getCell(row, col).value = Some(pieceFactory.getPiece(PieceInterface.getPieceTypeFromString(value), isWhite, row, col, hasMoved))
     }
 
     (grid, gameStatus)

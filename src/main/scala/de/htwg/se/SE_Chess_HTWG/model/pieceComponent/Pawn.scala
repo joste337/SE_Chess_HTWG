@@ -5,7 +5,7 @@ import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-case class Pawn(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends Piece {
+private[pieceComponent] class Pawn(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends PieceInterface {
   override def toString: String = if (isWhite) "\u265F" else "\u2659"
   override def toSimpleString: String = "P"
 

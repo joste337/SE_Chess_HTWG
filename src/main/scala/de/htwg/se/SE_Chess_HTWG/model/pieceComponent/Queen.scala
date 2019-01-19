@@ -5,7 +5,7 @@ import de.htwg.se.SE_Chess_HTWG.model.movement.{Move, MovementHelper}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-case class Queen(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends Piece {
+private[pieceComponent] class Queen(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends PieceInterface {
   override def toString: String = if (isWhite) "\u265B" else "\u2655"
   override def toSimpleString: String = "Q"
 

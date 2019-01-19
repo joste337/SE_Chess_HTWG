@@ -1,17 +1,19 @@
 package de.htwg.se.SE_Chess_HTWG.model.fileIOComponent
 
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
-
 import com.google.inject.Guice
 import de.htwg.se.SE_Chess_HTWG.ChessModule
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus.GameStatus
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.Piece
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{PieceFactory, PieceInterface}
 
 import scala.xml.PrettyPrinter
 
 class FileIOXmlImpl extends FileIOInterface {
   val FILE_NAME: String = "game.xml"
+
+  val injector = Guice.createInjector(new ChessModule)
+  val pieceFactory: PieceFactory = injector.getInstance(classOf[PieceFactory])
 
   override def save(grid: GridInterface, gameStatus: GameStatus): Unit = {
     import java.io._
@@ -36,7 +38,7 @@ class FileIOXmlImpl extends FileIOInterface {
       val value: String = piece.text.trim
       val isWhite: Boolean = (piece \ "@isWhite").text.toBoolean
       val hasMoved: Boolean = (piece \ "@hasMoved").text.toBoolean
-      grid.getCell(row, col).value = Piece.createPieceFromSimpleString(value, isWhite, row, col, hasMoved)
+      grid.getCell(row, col).value = Some(pieceFactory.getPiece(PieceInterface.getPieceTypeFromString(value), isWhite, row, col, hasMoved))
     }
 
     (grid, gameStatus)
@@ -50,7 +52,7 @@ class FileIOXmlImpl extends FileIOInterface {
     </game>
   }
 
-  def pieceToXml(piece: Piece) = {
+  def pieceToXml(piece: PieceInterface) = {
     <piece row ={piece.row.toString} col={piece.col.toString} isWhite={piece.isWhite.toString} hasMoved={piece.hasMoved.toString}>
       {piece.toSimpleString}
     </piece>
