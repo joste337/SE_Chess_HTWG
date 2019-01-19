@@ -8,7 +8,6 @@ import scala.swing.event.Event
 
 trait ControllerInterface extends Publisher {
   def gameStatus: GameStatus
-  def currentPlayerTurn: GameStatus
   def gridToString: String
   def createNewGrid: Unit
   def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult

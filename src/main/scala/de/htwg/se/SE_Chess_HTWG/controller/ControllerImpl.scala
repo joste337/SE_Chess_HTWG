@@ -16,14 +16,12 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
   val injector = Guice.createInjector(new ChessModule)
   val fileIo: FileIOInterface = injector.getInstance(classOf[FileIOInterface])
   var gameStatus: GameStatus = IDLE
-  var currentPlayerTurn: GameStatus = IDLE
 
   override def gridToString: String = grid.toString
 
   override def createNewGrid: Unit = {
     grid = grid.createNewGridWithPieces
-    gameStatus = GameStatus.PLAYER1TURN
-    currentPlayerTurn = GameStatus.PLAYER1TURN
+    gameStatus = PLAYER1TURN
     publish(new CellChanged)
   }
 
@@ -37,37 +35,30 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
         MovementResult.ERROR
       }
 
-    movementResult match {
-      case MovementResult.SUCCESS => {
-        gameStatus = GameStatus.nextPlayer(currentPlayerTurn)
-        currentPlayerTurn = gameStatus
-        publish(new CellChanged)
-      }
-      case MovementResult.PROMOTION => {
-        gameStatus = GameStatus.PROMOTION
-        publish(new CellChanged)
-      }
-      case _ =>
+    gameStatus = movementResult match {
+      case MovementResult.SUCCESS => GameStatus.nextPlayer(gameStatus)
+      case MovementResult.PROMOTION => GameStatus.getPromotion(gameStatus)
+      case _ => gameStatus
     }
+
+    publish(new CellChanged)
     movementResult
   }
 
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {
     val movementResult: MovementResult =
-      if (gameStatus == GameStatus.PROMOTION) {
+      if (gameStatus == PROMOTIONPLAYER1 || gameStatus == PROMOTIONPLAYER2) {
         grid.promotePiece(row, col, pieceShortcut)
       } else  {
         MovementResult.ERROR
       }
 
     movementResult match {
-      case MovementResult.SUCCESS => {
-        gameStatus = GameStatus.nextPlayer(currentPlayerTurn)
-        currentPlayerTurn = gameStatus
-        publish(new CellChanged)
-      }
+      case MovementResult.SUCCESS => gameStatus = GameStatus.nextPlayer(gameStatus)
       case _ =>
     }
+
+    publish(new CellChanged)
     movementResult
   }
 
