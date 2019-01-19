@@ -7,6 +7,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 case class Queen(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends Piece {
   override def toString: String = if (isWhite) "\u265B" else "\u2655"
+  override def toSimpleString: String = "Q"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
     if (getPossibleSquares(grid) contains move.getToCell) move.doMove() else MovementResult.ERROR

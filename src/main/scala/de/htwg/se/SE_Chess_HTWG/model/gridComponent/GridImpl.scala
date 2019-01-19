@@ -24,7 +24,20 @@ class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
 
   def movePiece(move: Move): MovementResult = move.executeMove
 
-  override def createNewGrid: GridInterface = {
+  def getSetCells(): List[Cell] = cells.getSetCells
+
+  override def createNewGridWithPieces: GridInterface = {
+    createNewGrid
+    setPieces
+    this
+  }
+
+  override def createNewGridWithoutPieces: GridInterface = {
+    createNewGrid
+    this
+  }
+
+  def setPieces: Unit = {
     for (col <- 0 until BOARD_SIZE) {
       setCells(replaceValue(1, col, Some(new Pawn(true, 1, col))))
       cells = replaceValue(0, col, Some(matchColToPiece(0, col, true)))
@@ -32,13 +45,13 @@ class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
       cells = replaceValue(6, col, Some(new Pawn(false, 6, col)))
       cells = replaceValue(7, col, Some(matchColToPiece(7, col, false)))
     }
+  }
 
+  def createNewGrid: Unit = {
     for {
       row <- 0 until BOARD_SIZE
       col <- 0 until BOARD_SIZE
     } if ((row + col) % 2 != 0) cells = replaceColor(row, col, true)
-
-    this
   }
 
   override def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {

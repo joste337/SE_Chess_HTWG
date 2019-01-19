@@ -3,6 +3,7 @@ package de.htwg.se.SE_Chess_HTWG.controller
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.SE_Chess_HTWG.ChessModule
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus._
+import de.htwg.se.SE_Chess_HTWG.model.fileIOComponent.FileIOInterface
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
 import de.htwg.se.SE_Chess_HTWG.model.movement.Move
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
@@ -13,13 +14,14 @@ import scala.swing.Publisher
 class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInterface with Publisher {
 
   val injector = Guice.createInjector(new ChessModule)
+  val fileIo: FileIOInterface = injector.getInstance(classOf[FileIOInterface])
   var gameStatus: GameStatus = IDLE
   var currentPlayerTurn: GameStatus = IDLE
 
   override def gridToString: String = grid.toString
 
   override def createNewGrid: Unit = {
-    grid = grid.createNewGrid
+    grid = grid.createNewGridWithPieces
     gameStatus = GameStatus.PLAYER1TURN
     currentPlayerTurn = GameStatus.PLAYER1TURN
     publish(new CellChanged)
@@ -76,5 +78,14 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
       case GameStatus.PLAYER2TURN => if (fromCell.isSet && !fromCell.value.get.isWhite) true else false
       case _ => false
     }
+  }
+
+  def save: Unit = fileIo.save(grid, gameStatus)
+
+  def load: Unit = {
+    val loadResult = fileIo.load
+    grid = loadResult._1
+    gameStatus = loadResult._2
+    publish(new CellChanged)
   }
 }

@@ -9,10 +9,12 @@ trait GridInterface {
   var promotionSquare: Option[Cell]
   def getCell(row: Int, col: Int): Cell
   def setCells(cells: Matrix): Unit
+  def getSetCells(): List[Cell]
   def replaceColor(row: Int, col: Int, isWhite: Boolean): Matrix
   def replaceValue(row: Int, col: Int, value: Option[Piece]): Matrix
   def movePiece(move: Move): MovementResult
-  def createNewGrid: GridInterface
+  def createNewGridWithPieces: GridInterface
+  def createNewGridWithoutPieces: GridInterface
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
 }
 
@@ -20,4 +22,5 @@ trait CellInterface {
   def value: Option[Piece]
   def isHighlighted: Boolean
   def isWhite: Boolean
+  def isSet: Boolean
 }

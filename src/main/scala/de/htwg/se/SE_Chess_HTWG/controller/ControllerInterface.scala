@@ -13,6 +13,8 @@ trait ControllerInterface extends Publisher {
   def createNewGrid: Unit
   def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
+  def save: Unit
+  def load: Unit
 }
 
 class CellChanged extends Event

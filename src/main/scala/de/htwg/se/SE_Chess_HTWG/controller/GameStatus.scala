@@ -22,4 +22,23 @@ object GameStatus extends Enumeration {
       case _ => IDLE
     }
   }
+
+  def toOutputString(gameStatus: GameStatus): String = {
+    gameStatus match {
+      case PLAYER1TURN => "p1"
+      case PLAYER2TURN => "p2"
+      case IDLE => "idle"
+      case PROMOTION => "promo"
+    }
+  }
+
+  def fromInputString(gameStatus: String): GameStatus = {
+    gameStatus match {
+      case "p1" => PLAYER1TURN
+      case "p2" => PLAYER2TURN
+      case "idle" => IDLE
+      case "promo" => PROMOTION
+      //case _ => IDLE
+    }
+  }
 }

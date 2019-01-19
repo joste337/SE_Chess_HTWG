@@ -27,6 +27,14 @@ class Tui(controller: ControllerInterface) extends Reactor {
           println(MovementResult.message(controller.movePiece(rowsAndCells._1, rowsAndCells._2, rowsAndCells._3, rowsAndCells._4)))
         }
       }
+      case "save" => {
+        controller.save
+        println("Saved current game.")
+      }
+      case "load" => {
+        controller.load
+        println("Loaded saved game.")
+      }
       case _ => printTui
     }
   }
