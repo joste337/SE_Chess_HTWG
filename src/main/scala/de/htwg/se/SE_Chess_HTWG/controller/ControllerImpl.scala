@@ -38,6 +38,8 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
     gameStatus = movementResult match {
       case MovementResult.SUCCESS => GameStatus.nextPlayer(gameStatus)
       case MovementResult.PROMOTION => GameStatus.getPromotion(gameStatus)
+      case MovementResult.BLACKKINGTAKEN => IDLE
+      case MovementResult.WHITEKINGTAKEN => IDLE
       case _ => gameStatus
     }
 

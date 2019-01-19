@@ -34,8 +34,8 @@ private[pieceComponent] class Pawn(override val isWhite: Boolean, override var r
 
   def getDiagonalCaptureMoves(grid: GridInterface, nextRow: Int): List[Cell] = {
     var possibleSquares: List[Cell] = Nil
-    if (col - 1 > 0 && grid.getCell(nextRow, col - 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col - 1)::possibleSquares
-    if (col - 1 > 0 && grid.getCell(nextRow, col + 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col + 1)::possibleSquares
+    if (col - 1 >= 0 && grid.getCell(nextRow, col - 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col - 1)::possibleSquares
+    if (col + 1 <= 7 && grid.getCell(nextRow, col + 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col + 1)::possibleSquares
     possibleSquares
   }
 
