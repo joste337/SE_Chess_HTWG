@@ -1,23 +1,29 @@
 package de.htwg.se.SE_Chess_HTWG.aView.gui
 
 import java.io.PrintWriter
-import scala.swing._
+
+import scala.swing.{Color, _}
 import scala.swing.Swing.LineBorder
 import scala.swing.event._
-import de.htwg.se.SE_Chess_HTWG.controller.ControllerInterface
+import de.htwg.se.SE_Chess_HTWG.controller.{CellChanged, ControllerInterface, GameStatus}
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent._
 import java.awt.Color
+
+import javax.swing.JFrame
+
 import scala.io.Source
 
 class CellClicked(val row: Int, val column: Int) extends Event
 
-class SwingGui (controller: ControllerInterface) extends Frame  {
+class SwingGui (controller: ControllerInterface) extends Frame with Reactor{
+
+  peer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 
   listenTo(controller)
   title = "SE Chess HTWG"
 
   menuBar = new MenuBar {
-    contents += new Menu("File") {
+    contents += new Menu("File    ") {
       contents += new MenuItem(Action("New") {
         newGame
       })
@@ -35,14 +41,40 @@ class SwingGui (controller: ControllerInterface) extends Frame  {
     visible = true
   }
 
+  var cells = Array.ofDim[CellPanel](8, 8)
+
   val textArea = new TextArea()  //for testing gridtostring
 
-  contents = new GridPanel(8,8) {
-    contents += new TextField(controller.gridToString)
+  val cellIsWhite = new Color(255,205,155)
+  val cellIsBlack = new Color(220,140,70)
+  val cellIsSelected = new Color(200,150,255)
+
+  def gridPanel = new GridPanel(8,8) {
+    border = LineBorder(java.awt.Color.BLACK, 2)
+    background = java.awt.Color.BLACK
+
+    for {
+      x <- 0 until 8
+      y <- 0 until 8
+    } {
+      val cellPanel = new CellPanel(x, y, controller)
+      cells(x)(y) = cellPanel
+      cellPanel.background = if ((x+y) % 2 == 0) cellIsBlack else cellIsWhite
+      contents += cellPanel
+      listenTo(cellPanel)
+    }
   }
 
+
+//  contents = new GridPanel(8,8) {
+//    contents += new TextField(controller.gridToString)
+//  }
+  contents = new BorderPanel {
+    add(gridPanel, BorderPanel.Position.Center)
+  }
+
+
     val player: (String, String) = ("Player 1", "Player 2")
-    var cells = Array.ofDim[CellPanel](8, 8)
 
 
 
@@ -78,6 +110,12 @@ class SwingGui (controller: ControllerInterface) extends Frame  {
     }
   }
 
-
-
+//  reactions += {
+//    case event: CellChanged => printTui
+//  }
+//
+//  def printTui: Unit = {
+//    println(controller.gridToString)
+//    println(GameStatus.message(controller.gameStatus))
+//  }
 }

@@ -11,25 +11,22 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
   val cellIsBlack = new Color(220,140,70)
   val cellIsSelected = new Color(200,150,255)
 
-  //def myCell = controller.cell(row, col)
+  def myCell = controller.cell(row, col)
+  def cellText(row: Int, col: Int) = controller.grid.getCell(row, col)
+
 
   val boardSize = new Dimension(600, 600)
   val squareSize = new Dimension(boardSize.width / 8, boardSize.height / 8)
 
-
   val label =
     new Label {
       text = controller.cell(row,col).toString
-      font = new Font("Verdana", 1, 36)
+      //font = new Font("Verdana", 1, 36)
     }
-  val cell = new BoxPanel(Orientation.Horizontal) {
+  val cell = new BoxPanel(Orientation.Vertical) { //Horizontal) {
     contents += label
     preferredSize = new Dimension(75, 75) // 600 framesize / 8 cells
-
-    //background = if (controller.cellIsWhite else cellIsBlack
-
-
-    border = LineBorder(java.awt.Color.BLACK, 5)
+    border = LineBorder(java.awt.Color.BLACK, 2)
     border = Swing.BeveledBorder(Swing.Raised)
     listenTo(mouse.clicks)
     listenTo(controller)
@@ -48,12 +45,13 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
   contents += cell
 
 
-//  def redraw = {
-//    contents.clear()
-//    label.text = controller.cell(row,col).toString
-//    contents += cell
-//    repaint
-//  }
+
+  def redraw = {
+    contents.clear()
+    label.text = controller.cell(row,col).toString
+    contents += cell
+    repaint
+  }
 
 
 }
