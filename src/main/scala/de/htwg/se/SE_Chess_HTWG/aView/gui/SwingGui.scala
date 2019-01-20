@@ -54,39 +54,23 @@ class SwingGui (controller: ControllerInterface) extends Frame with Reactor{
     background = java.awt.Color.BLACK
 
     for {
-      x <- 0 until 8
+      x <- (0 until 8).reverse
       y <- 0 until 8
     } {
       val cellPanel = new CellPanel(x, y, controller)
       cells(x)(y) = cellPanel
-      cellPanel.background = if ((x+y) % 2 == 0) cellIsBlack else cellIsWhite
       contents += cellPanel
       listenTo(cellPanel)
     }
   }
 
-
-//  contents = new GridPanel(8,8) {
-//    contents += new TextField(controller.gridToString)
-//  }
   contents = new BorderPanel {
     add(gridPanel, BorderPanel.Position.Center)
   }
 
-
-    val player: (String, String) = ("Player 1", "Player 2")
-
-
-
-
-
-
-
   size = new Dimension(600, 600)
   centerOnScreen()
   this.visible = true
-
-
 
   def newGame: Unit = {
     controller.createNewGrid
@@ -110,12 +94,17 @@ class SwingGui (controller: ControllerInterface) extends Frame with Reactor{
     }
   }
 
-//  reactions += {
-//    case event: CellChanged => printTui
-//  }
-//
-//  def printTui: Unit = {
-//    println(controller.gridToString)
-//    println(GameStatus.message(controller.gameStatus))
-//  }
+  def redraw: Unit = {
+    for {
+      x <- (0 until 8).reverse
+      y <- 0 until 8
+    } {
+      cells(x)(y).redraw
+    }
+    repaint
+  }
+
+  reactions += {
+    case event: CellChanged => redraw
+  }
 }

@@ -1,13 +1,14 @@
 package de.htwg.se.SE_Chess_HTWG.controller
 
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus.GameStatus
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 import scala.swing.Publisher
 import scala.swing.event.Event
 
 trait ControllerInterface extends Publisher {
+  var clickedCell: Option[(Int, Int)]
   def gameStatus: GameStatus
   def currentPlayerTurn: GameStatus
   def gridToString: String
