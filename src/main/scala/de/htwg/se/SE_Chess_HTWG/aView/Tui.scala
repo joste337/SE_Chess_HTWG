@@ -35,6 +35,8 @@ class Tui(controller: ControllerInterface) extends Reactor {
         controller.load
         println("Loaded saved game.")
       }
+      case "undo" => controller.undo
+      case "redo" => controller.redo
       case _ => printTui
     }
   }

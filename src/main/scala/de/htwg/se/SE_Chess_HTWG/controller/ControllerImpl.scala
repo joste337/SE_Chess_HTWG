@@ -15,6 +15,7 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
 
   val injector = Guice.createInjector(new ChessModule)
   val fileIo: FileIOInterface = injector.getInstance(classOf[FileIOInterface])
+  val undoManager: UndoManager = new UndoManagerImpl(grid)
   var gameStatus: GameStatus = IDLE
 
   override def gridToString: String = grid.toString
@@ -30,6 +31,8 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
 
     val movementResult: MovementResult =
       if (move.isInGrid && pieceColorMatchesTurnColor(fromRow, fromCol)) {
+        undoManager.undoStack =
+          ((fromRow, fromCol, grid.getCell(fromRow, fromCol).value), (toRow, toCol, grid.getCell(toRow, toCol).value))::undoManager.undoStack
         grid.movePiece(move)
       } else {
         MovementResult.ERROR
@@ -71,6 +74,16 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
       case GameStatus.PLAYER2TURN => if (fromCell.isSet && !fromCell.value.get.isWhite) true else false
       case _ => false
     }
+  }
+
+  def undo: Unit = {
+    undoManager.undoMove
+    publish(new CellChanged)
+  }
+
+  def redo: Unit = {
+    undoManager.redoMove
+    publish(new CellChanged)
   }
 
   def save: Unit = fileIo.save(grid, gameStatus)
