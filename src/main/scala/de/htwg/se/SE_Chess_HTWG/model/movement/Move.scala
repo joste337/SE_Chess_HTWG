@@ -4,7 +4,7 @@ import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-class Move(val grid: GridInterface, val fromRow:Int, val fromCol: Int, val toRow: Int, val toCol: Int) {
+class Move (var grid: GridInterface, val fromRow:Int, val fromCol: Int, val toRow: Int, val toCol: Int) {
   def executeMove: MovementResult = getFromCell.value.get.executeMove(grid, this)
   def getFromCell: Cell = grid.getCell(fromRow, fromCol)
   def getToCell: Cell = grid.getCell(toRow, toCol)
@@ -15,13 +15,18 @@ class Move(val grid: GridInterface, val fromRow:Int, val fromCol: Int, val toRow
   }
 
   def doMove(): MovementResult = {
-      val fromCell = getFromCell
-      grid.setCells(grid.replaceValue(toRow, toCol, fromCell.value))
-      grid.setCells(grid.replaceValue(fromRow, fromCol, None))
-      fromCell.value.get.hasMoved = true
-      fromCell.value.get.row = toRow
-      fromCell.value.get.col = toCol
-      grid.enPassantSquare = None
+    val fromCell = getFromCell
+    val toCell = getToCell
+    grid.setCells(grid.replaceValue(toRow, toCol, fromCell.value))
+    grid.setCells(grid.replaceValue(fromRow, fromCol, None))
+    fromCell.value.get.hasMoved = true
+    fromCell.value.get.row = toRow
+    fromCell.value.get.col = toCol
+    grid.enPassantSquare = None
+    if (toCell.isSet && toCell.value.get.toSimpleString == "K") {
+      if (toCell.value.get.isWhite) MovementResult.WHITEKINGTAKEN else MovementResult.BLACKKINGTAKEN
+    } else {
       MovementResult.SUCCESS
+    }
   }
 }

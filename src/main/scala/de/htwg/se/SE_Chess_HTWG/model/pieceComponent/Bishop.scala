@@ -5,8 +5,9 @@ import de.htwg.se.SE_Chess_HTWG.model.movement.{Move, MovementHelper}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-case class Bishop(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends Piece {
+private[pieceComponent] class Bishop(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface {
   override def toString: String = if (isWhite) "\u2657" else "\u265D"
+  override def toSimpleString: String = "B"
   val imageName = if (isWhite) "bishop_w" else "bishop_b"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
@@ -16,8 +17,8 @@ case class Bishop(override val isWhite: Boolean, override var row: Int, override
   def getPossibleSquares(grid: GridInterface): List[Cell] = {
     val rowsToEighthRow = ((row + 1) until 8).toList
     val colsToEightCol = ((col + 1) until 8).toList
-    val rowsToFirstRow = (0 until (row - 1)).reverse.toList
-    val colsToFirstRow = (0 until (col - 1)).reverse.toList
+    val rowsToFirstRow = (0 until row).reverse.toList
+    val colsToFirstRow = (0 until col).reverse.toList
 
     MovementHelper.getSquaresUntilColliding(grid, (rowsToEighthRow zip colsToEightCol), isWhite):::
       MovementHelper.getSquaresUntilColliding(grid, (rowsToEighthRow zip colsToFirstRow), isWhite):::

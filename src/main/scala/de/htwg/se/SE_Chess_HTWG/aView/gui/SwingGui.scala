@@ -76,23 +76,9 @@ class SwingGui (controller: ControllerInterface) extends Frame with Reactor{
     controller.createNewGrid
   }
 
-  def openFile {
-    val chooser = new FileChooser()
-    if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
-      val source = Source.fromFile(chooser.selectedFile)
-      textArea.text = source.mkString
-      source.close()
-    }
-  }
+  def openFile: Unit =  controller.load
 
-  def saveFile: Unit = {
-    val chooser = new FileChooser()
-    if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
-      val printwriter = new PrintWriter(chooser.selectedFile)
-      printwriter.print(textArea.text)
-      printwriter.close()
-    }
-  }
+  def saveFile: Unit = controller.save
 
   def redraw: Unit = {
     for {

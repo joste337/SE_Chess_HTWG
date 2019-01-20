@@ -10,13 +10,15 @@ import scala.swing.event.Event
 trait ControllerInterface extends Publisher {
   var clickedCell: Option[(Int, Int)]
   def gameStatus: GameStatus
-  def currentPlayerTurn: GameStatus
   def gridToString: String
   def createNewGrid: Unit
   def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
-  def cell(row:Int, col:Int)
   var grid: GridInterface
+  def undo: Unit
+  def redo: Unit
+  def save: Unit
+  def load: Unit
 }
 
 class CellChanged extends Event

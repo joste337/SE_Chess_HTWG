@@ -13,7 +13,6 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
   val cellIsSelected = new Color(200,150,255)
   val piecesImgBasePath = "src/main/scala/de/htwg/se/SE_Chess_HTWG/aView/gui/pieceImgs/"
 
-  def myCell = controller.cell(row, col)
   def cellText(row: Int, col: Int) = controller.grid.getCell(row, col)
 
 

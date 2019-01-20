@@ -5,8 +5,9 @@ import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-case class Pawn(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends Piece {
+private[pieceComponent] class Pawn(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface {
   override def toString: String = if (isWhite) "\u2659" else "\u265F"
+  override def toSimpleString: String = "P"
   val imageName = if (isWhite) "pawn_w" else "pawn_b"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
@@ -34,8 +35,8 @@ case class Pawn(override val isWhite: Boolean, override var row: Int, override v
 
   def getDiagonalCaptureMoves(grid: GridInterface, nextRow: Int): List[Cell] = {
     var possibleSquares: List[Cell] = Nil
-    if (col - 1 > 0 && grid.getCell(nextRow, col - 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col - 1)::possibleSquares
-    if (col - 1 > 0 && grid.getCell(nextRow, col + 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col + 1)::possibleSquares
+    if (col - 1 >= 0 && grid.getCell(nextRow, col - 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col - 1)::possibleSquares
+    if (col + 1 <= 7 && grid.getCell(nextRow, col + 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col + 1)::possibleSquares
     possibleSquares
   }
 
