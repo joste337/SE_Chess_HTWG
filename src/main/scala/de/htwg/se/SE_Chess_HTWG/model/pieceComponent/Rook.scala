@@ -5,8 +5,8 @@ import de.htwg.se.SE_Chess_HTWG.model.movement.{Move, MovementHelper}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-private[pieceComponent] class Rook(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends PieceInterface {
-  override def toString: String = if (isWhite) "\u265C" else "\u2656"
+private[pieceComponent] class Rook(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface {
+  override def toString: String = if (isWhite) "\u2656" else "\u265C"
   override def toSimpleString: String = "R"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {

@@ -5,8 +5,8 @@ import de.htwg.se.SE_Chess_HTWG.model.movement.{Move, MovementHelper}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-private[pieceComponent] class Knight(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends PieceInterface{
-  override def toString: String = if (isWhite) "\u265E" else "\u2658"
+private[pieceComponent] class Knight(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface{
+  override def toString: String = if (isWhite) "\u2658" else "\u265E"
   override def toSimpleString: String = "N"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {

@@ -5,8 +5,8 @@ import de.htwg.se.SE_Chess_HTWG.model.movement.{Move, MovementHelper}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-private[pieceComponent] case class King(override val isWhite: Boolean, override var row: Int, override var col: Int, override var hasMoved: Boolean = false) extends PieceInterface {
-  override def toString: String = if (isWhite) "\u265A" else "\u2654"
+private[pieceComponent] case class King(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface {
+  override def toString: String = if (isWhite) "\u2654" else "\u265A"
   override def toSimpleString: String = "K"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {

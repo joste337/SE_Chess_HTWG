@@ -47,7 +47,7 @@ class CellSpec extends WordSpec with Matchers {
       cell.isWhite should be(false)
     }
     "have the right string representation of the piece" in {
-      cell.toString should be("\u265C")
+      cell.toString should be("\u2656")
     }
   }}
 }
