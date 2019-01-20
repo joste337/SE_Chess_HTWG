@@ -16,8 +16,8 @@ private[pieceComponent] class Bishop(val isWhite: Boolean, var row: Int, var col
   def getPossibleSquares(grid: GridInterface): List[Cell] = {
     val rowsToEighthRow = ((row + 1) until 8).toList
     val colsToEightCol = ((col + 1) until 8).toList
-    val rowsToFirstRow = (0 until (row - 1)).reverse.toList
-    val colsToFirstRow = (0 until (col - 1)).reverse.toList
+    val rowsToFirstRow = (0 until row).reverse.toList
+    val colsToFirstRow = (0 until col).reverse.toList
 
     MovementHelper.getSquaresUntilColliding(grid, (rowsToEighthRow zip colsToEightCol), isWhite):::
       MovementHelper.getSquaresUntilColliding(grid, (rowsToEighthRow zip colsToFirstRow), isWhite):::

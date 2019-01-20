@@ -19,8 +19,8 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class QueenSpec extends WordSpec with Matchers {
   val testGrid: GridInterface = TestGrid.getTestGrid
-  val row: Int = 6
-  val col: Int = 1
+  val row: Int = 1
+  val col: Int = 7
 
   "A Queen on testgrid" when { "get available moves" should {
     val queen: PieceInterface = testGrid.getCell(row, col).value.get
