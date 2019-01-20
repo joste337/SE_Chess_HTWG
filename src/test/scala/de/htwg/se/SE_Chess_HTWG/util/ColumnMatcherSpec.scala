@@ -31,18 +31,4 @@ class ColumnMatcherSpec extends WordSpec with Matchers {
       ColumnMatcher.matchColToLetter(7) should be("h  ")
     }
   }}
-  "ColumnMatcher" when { "matchColToPiece" should {
-    "return the right piece" in {
-      ColumnMatcher.matchColToPiece(0,0, true) should be(Rook(true, 0, 0))
-      ColumnMatcher.matchColToPiece(0,1, true) should be(Knight(true, 0, 1))
-      ColumnMatcher.matchColToPiece(0,2, true) should be(Bishop(true, 0, 2))
-      ColumnMatcher.matchColToPiece(0,3, true) should be(Queen(true, 0, 3))
-      ColumnMatcher.matchColToPiece(0,3, false) should be(King(false, 0, 3))
-      ColumnMatcher.matchColToPiece(0,4, true) should be(King(true, 0, 4))
-      ColumnMatcher.matchColToPiece(0,4, false) should be(Queen(false, 0, 4))
-      ColumnMatcher.matchColToPiece(0,5, true) should be(Bishop(true, 0, 5))
-      ColumnMatcher.matchColToPiece(0,6, true) should be(Knight(true, 0, 6))
-      ColumnMatcher.matchColToPiece(0,7, true) should be(Rook(true, 0, 7))
-    }
-  }}
 }

@@ -29,18 +29,4 @@ object ColumnMatcher {
       case "h" => 7
     }
   }
-
-  // Hilfsmethode um die richtige Figur in der jeweiligen Spalte zu setzen
-  def matchColToPiece(row: Int, col: Int, isWhite: Boolean): Piece = {
-    col match {
-      case 0 => Rook(isWhite, row, col)
-      case 1 => Knight(isWhite, row, col)
-      case 2 => Bishop(isWhite, row, col)
-      case 3 => if (isWhite) Queen(isWhite, row, col) else King(isWhite, row, col)
-      case 4 => if (isWhite) new King(isWhite, row, col) else Queen(isWhite, row, col)
-      case 5 => Bishop(isWhite, row, col)
-      case 6 => Knight(isWhite, row, col)
-      case 7 => Rook(isWhite, row, col)
-    }
-  }
 }

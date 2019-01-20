@@ -3,6 +3,7 @@ package de.htwg.se.SE_Chess_HTWG.controller
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.SE_Chess_HTWG.ChessModule
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus._
+import de.htwg.se.SE_Chess_HTWG.model.fileIOComponent.FileIOInterface
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
 import de.htwg.se.SE_Chess_HTWG.model.movement.Move
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
@@ -13,15 +14,15 @@ import scala.swing.Publisher
 class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInterface with Publisher {
 
   val injector = Guice.createInjector(new ChessModule)
+  val fileIo: FileIOInterface = injector.getInstance(classOf[FileIOInterface])
+  val undoManager: UndoManager = new UndoManagerImpl(grid)
   var gameStatus: GameStatus = IDLE
-  var currentPlayerTurn: GameStatus = IDLE
 
   override def gridToString: String = grid.toString
 
   override def createNewGrid: Unit = {
-    grid = grid.createNewGrid
-    gameStatus = GameStatus.PLAYER1TURN
-    currentPlayerTurn = GameStatus.PLAYER1TURN
+    grid = grid.createNewGridWithPieces
+    gameStatus = PLAYER1TURN
     publish(new CellChanged)
   }
 
@@ -30,42 +31,39 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
 
     val movementResult: MovementResult =
       if (move.isInGrid && pieceColorMatchesTurnColor(fromRow, fromCol)) {
+        undoManager.undoStack =
+          ((fromRow, fromCol, grid.getCell(fromRow, fromCol).value), (toRow, toCol, grid.getCell(toRow, toCol).value))::undoManager.undoStack
         grid.movePiece(move)
       } else {
         MovementResult.ERROR
       }
 
-    movementResult match {
-      case MovementResult.SUCCESS => {
-        gameStatus = GameStatus.nextPlayer(currentPlayerTurn)
-        currentPlayerTurn = gameStatus
-        publish(new CellChanged)
-      }
-      case MovementResult.PROMOTION => {
-        gameStatus = GameStatus.PROMOTION
-        publish(new CellChanged)
-      }
-      case _ =>
+    gameStatus = movementResult match {
+      case MovementResult.SUCCESS => GameStatus.nextPlayer(gameStatus)
+      case MovementResult.PROMOTION => GameStatus.getPromotion(gameStatus)
+      case MovementResult.BLACKKINGTAKEN => IDLE
+      case MovementResult.WHITEKINGTAKEN => IDLE
+      case _ => gameStatus
     }
+
+    publish(new CellChanged)
     movementResult
   }
 
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {
     val movementResult: MovementResult =
-      if (gameStatus == GameStatus.PROMOTION) {
+      if (gameStatus == PROMOTIONPLAYER1 || gameStatus == PROMOTIONPLAYER2) {
         grid.promotePiece(row, col, pieceShortcut)
       } else  {
         MovementResult.ERROR
       }
 
     movementResult match {
-      case MovementResult.SUCCESS => {
-        gameStatus = GameStatus.nextPlayer(currentPlayerTurn)
-        currentPlayerTurn = gameStatus
-        publish(new CellChanged)
-      }
+      case MovementResult.SUCCESS => gameStatus = GameStatus.nextPlayer(gameStatus)
       case _ =>
     }
+
+    publish(new CellChanged)
     movementResult
   }
 
@@ -76,5 +74,24 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
       case GameStatus.PLAYER2TURN => if (fromCell.isSet && !fromCell.value.get.isWhite) true else false
       case _ => false
     }
+  }
+
+  def undo: Unit = {
+    undoManager.undoMove
+    publish(new CellChanged)
+  }
+
+  def redo: Unit = {
+    undoManager.redoMove
+    publish(new CellChanged)
+  }
+
+  def save: Unit = fileIo.save(grid, gameStatus)
+
+  def load: Unit = {
+    val loadResult = fileIo.load
+    grid = loadResult._1
+    gameStatus = loadResult._2
+    publish(new CellChanged)
   }
 }
