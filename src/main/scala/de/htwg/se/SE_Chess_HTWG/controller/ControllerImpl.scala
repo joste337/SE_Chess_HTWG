@@ -3,6 +3,7 @@ package de.htwg.se.SE_Chess_HTWG.controller
 import com.google.inject.{Guice, Inject}
 import de.htwg.se.SE_Chess_HTWG.ChessModule
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus._
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
 import de.htwg.se.SE_Chess_HTWG.model.fileIOComponent.FileIOInterface
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
 import de.htwg.se.SE_Chess_HTWG.model.movement.Move
@@ -14,6 +15,7 @@ import scala.swing.Publisher
 class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInterface with Publisher {
 
   val injector = Guice.createInjector(new ChessModule)
+  var clickedCell: Option[(Int, Int)] = None
   val fileIo: FileIOInterface = injector.getInstance(classOf[FileIOInterface])
   val undoManager: UndoManager = new UndoManagerImpl(grid)
   var gameStatus: GameStatus = IDLE

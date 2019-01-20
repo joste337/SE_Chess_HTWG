@@ -8,6 +8,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 private[pieceComponent] class Knight(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface{
   override def toString: String = if (isWhite) "\u2658" else "\u265E"
   override def toSimpleString: String = "N"
+  val imageName = if (isWhite) "knight_w" else "knight_b"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
     if (getPossibleSquares(grid) contains move.getToCell) move.doMove() else MovementResult.ERROR

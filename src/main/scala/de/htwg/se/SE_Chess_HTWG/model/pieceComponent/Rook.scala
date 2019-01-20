@@ -8,6 +8,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 private[pieceComponent] class Rook(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface {
   override def toString: String = if (isWhite) "\u2656" else "\u265C"
   override def toSimpleString: String = "R"
+  val imageName = if (isWhite) "rook_w" else "rook_b"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
     if (getPossibleSquares(grid) contains move.getToCell) move.doMove() else MovementResult.ERROR

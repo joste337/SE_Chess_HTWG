@@ -14,6 +14,7 @@ trait PieceInterface {
   def toSimpleString: String
   def executeMove(grid: GridInterface, move: Move): MovementResult
   def getPossibleSquares(grid: GridInterface): List[Cell]
+  val imageName: String
 }
 
 object PieceInterface extends Enumeration {
@@ -42,16 +43,4 @@ object PieceInterface extends Enumeration {
 object Piece extends Enumeration {
   type Piece = Value
   val PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING = Value
-
-//  def createPieceFromSimpleString(simpleString: String, isWhite: Boolean, row: Int, col: Int, hasMoved: Boolean): Option[Piece] = {
-//    simpleString match {
-//      case "P" => Some(Pawn(isWhite, row, col, hasMoved))
-//      case "R" => Some(Rook(isWhite, row, col, hasMoved))
-//      case "N" => Some(Knight(isWhite, row, col, hasMoved))
-//      case "B" => Some(Bishop(isWhite, row, col, hasMoved))
-//      case "K" => Some(King(isWhite, row, col, hasMoved))
-//      case "Q" => Some(Queen(isWhite, row, col, hasMoved))
-//      case _ => None
-//    }
-//  }
 }

@@ -8,6 +8,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 private[pieceComponent] class Pawn(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface {
   override def toString: String = if (isWhite) "\u2659" else "\u265F"
   override def toSimpleString: String = "P"
+  val imageName = if (isWhite) "pawn_w" else "pawn_b"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
     if (getEnPassantMove(grid) == move.getToCell) {
