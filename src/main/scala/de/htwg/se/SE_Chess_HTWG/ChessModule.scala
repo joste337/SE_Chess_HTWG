@@ -9,11 +9,10 @@ import net.codingwell.scalaguice.ScalaModule
 
 class ChessModule extends AbstractModule with ScalaModule{
 
-  def configure() = {
+  def configure(): Unit = {
     bind[GridInterface].to[GridImpl]
     bind[ControllerInterface].to[ControllerImpl]
     bind[FileIOInterface].to[FileIOXmlImpl]
     bind[PieceFactory].to[PieceFactoryImpl]
   }
-
 }

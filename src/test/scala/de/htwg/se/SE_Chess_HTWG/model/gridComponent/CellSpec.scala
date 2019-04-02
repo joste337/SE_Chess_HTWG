@@ -13,7 +13,7 @@ class CellSpec extends WordSpec with Matchers {
   val pieceFactory: PieceFactory = injector.getInstance(classOf[PieceFactory])
 
   "A Cell" when { "new with white and no piece" should {
-    val cell = Cell(None, true, false)
+    val cell = Cell(None, true)
     "not be set" in {
       cell.isSet should be(false)
     }
@@ -26,7 +26,7 @@ class CellSpec extends WordSpec with Matchers {
   }}
 
   "A Cell" when { "new with black and no piece" should {
-    val cell = Cell(None, false, false)
+    val cell = Cell(None, false)
     "not be set" in {
       cell.isSet should be(false)
     }
@@ -39,7 +39,7 @@ class CellSpec extends WordSpec with Matchers {
   }}
 
   "A Cell" when { "new with black and a rook" should {
-    val cell = Cell(Some(pieceFactory.getPiece(PieceType.ROOK, true, 1, 1, false)), false, false)
+    val cell = Cell(Some(pieceFactory.getPiece(PieceType.ROOK, true, 1, 1, false)), false)
     "be set" in {
       cell.isSet should be(true)
     }

@@ -7,6 +7,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 trait GridInterface {
   var enPassantSquare: Option[Cell]
   var promotionSquare: Option[Cell]
+  var selectedSquare: Option[(Int, Int)]
   def getCell(row: Int, col: Int): Cell
   def setCells(cells: Matrix): Unit
   def getSetCells(): List[Cell]
@@ -21,7 +22,6 @@ trait GridInterface {
 
 trait CellInterface {
   def value: Option[Piece]
-  def isHighlighted: Boolean
   def isWhite: Boolean
   def isSet: Boolean
 }

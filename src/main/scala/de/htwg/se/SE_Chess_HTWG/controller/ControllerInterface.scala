@@ -12,6 +12,9 @@ trait ControllerInterface extends Publisher {
   def gameStatus: GameStatus
   def gridToString: String
   def createNewGrid: Unit
+  def selectSquare(row: Int, col: Int): Unit
+  def deselectSquare: Unit
+  def getSelectedSquare: Option[(Int, Int)]
   def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
   var grid: GridInterface

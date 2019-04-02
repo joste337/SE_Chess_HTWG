@@ -42,13 +42,13 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
         repaint
       }
       case MouseClicked(src, pt, mod, clicks, pops) => {
-        if (controller.clickedCell.isEmpty) {
-          controller.clickedCell = Some((row, col))
+        if (controller.getSelectedSquare.isEmpty) {
+          controller.selectSquare(row, col)
         } else {
-          val fromRow: Int = controller.clickedCell.get._1
-          val fromCol: Int = controller.clickedCell.get._2
+          val fromRow: Int = controller.getSelectedSquare.get._1
+          val fromCol: Int = controller.getSelectedSquare.get._2
           controller.movePiece(fromRow, fromCol, row, col)
-          controller.clickedCell = None
+          controller.deselectSquare
         }
         repaint
       }

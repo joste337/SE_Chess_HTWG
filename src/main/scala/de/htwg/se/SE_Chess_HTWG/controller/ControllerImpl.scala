@@ -12,7 +12,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 import scala.swing.Publisher
 
-class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInterface with Publisher {
+class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
 
   val log : Logger = LoggerFactory.getLogger(this.getClass)
   val injector = Guice.createInjector(new ChessModule)
@@ -28,6 +28,10 @@ class ControllerImpl @Inject() (var grid: GridInterface) extends ControllerInter
     gameStatus = PLAYER1TURN
     publish(new CellChanged)
   }
+
+  override def selectSquare(row: Int, col: Int): Unit = grid.selectedSquare = Some((row, col))
+  override def deselectSquare: Unit = grid.selectedSquare = None
+  override def getSelectedSquare: Option[(Int, Int)] = grid.selectedSquare
 
   override def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult = {
     val move: Move = new Move(grid, fromRow, fromCol, toRow, toCol)
