@@ -14,9 +14,10 @@ trait Piece {
   var col: Int
   var row: Int
   def isWhite: Boolean = if (color == PieceColor.WHITE) true else false
+  def isOnRowAndCol(row: Int, col: Int): Boolean = this.row == row && this.col == col
   def executeMove(grid: GridInterface, move: Move): MovementResult = if (getPossibleSquares(grid) contains move.getToCell) move.doMove() else MovementResult.ERROR
   def getPossibleSquares(grid: GridInterface): List[Cell]
-  def toSimpleString: String
+  def toShortcut: String
   def getImageName: String
 }
 
@@ -25,7 +26,7 @@ object Piece extends Enumeration {
     def writes(piece: Piece) = Json.obj(
       "row" -> piece.row,
       "col" -> piece.col,
-      "value" -> piece.toSimpleString,
+      "value" -> piece.toShortcut,
       "color" -> piece.color,
       "hasMoved" -> piece.hasMoved
     )

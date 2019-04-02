@@ -49,14 +49,11 @@ class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
   }
 
   override def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {
-    if (promotionSquare.isDefined && promotionSquare.get.value.get.row == row && promotionSquare.get.value.get.col == col) {
-      val promotionPiece: Option[Piece] = getPromotionPieceFromPieceShortcut(row, col, pieceShortcut, getCell(row, col).value.get.isWhite)
-      if (promotionPiece.isDefined) {
-        replaceValue(row, col, promotionPiece)
-        MovementResult.SUCCESS
-      } else {
-        MovementResult.ERROR
-      }
+    val promotionPiece: Option[Piece] = getPromotionPieceFromPieceShortcut(row, col, pieceShortcut, getCell(row, col).value.get.isWhite)
+
+    if (promotionPiece.isDefined && promotionSquare.isDefined && promotionSquare.get.value.get.isOnRowAndCol(row, col)) {
+      replaceValue(row, col, promotionPiece)
+      MovementResult.SUCCESS
     } else {
       MovementResult.ERROR
     }
@@ -75,14 +72,14 @@ class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
   def setUpPieces(): Unit = {
     for (col <- 0 until BOARD_SIZE) {
       setCells(replaceValue(1, col, Some(pieceFactory.getPiece(PieceType.PAWN, true, 1, col))))
-      cells = replaceValue(0, col, Some(matchColToPiece(0, col, true)))
+      setCells(replaceValue(0, col, Some(getPieceForColumn(0, col, true))))
 
-      cells = replaceValue(6, col, Some(pieceFactory.getPiece(PieceType.PAWN,false, 6, col)))
-      cells = replaceValue(7, col, Some(matchColToPiece(7, col, false)))
+      setCells(replaceValue(6, col, Some(pieceFactory.getPiece(PieceType.PAWN,false, 6, col))))
+      setCells(replaceValue(7, col, Some(getPieceForColumn(7, col, false))))
     }
   }
 
-  def matchColToPiece(row: Int, col: Int, isWhite: Boolean): Piece = {
+  def getPieceForColumn(row: Int, col: Int, isWhite: Boolean): Piece = {
     col match {
       case 0 => pieceFactory.getPiece(PieceType.ROOK, isWhite, row, col)
       case 1 => pieceFactory.getPiece(PieceType.KNIGHT, isWhite, row, col)

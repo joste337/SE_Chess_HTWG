@@ -17,7 +17,7 @@ trait GridInterface {
   def createNewGridWithPieces: GridInterface
   def createNewGridWithoutPieces: GridInterface
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
-  def matchColToPiece(row: Int, col: Int, isWhite: Boolean): Piece
+  def getPieceForColumn(row: Int, col: Int, isWhite: Boolean): Piece
 }
 
 trait CellInterface {

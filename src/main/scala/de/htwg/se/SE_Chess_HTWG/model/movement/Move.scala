@@ -23,7 +23,7 @@ class Move (var grid: GridInterface, val fromRow:Int, val fromCol: Int, val toRo
     fromCell.value.get.row = toRow
     fromCell.value.get.col = toCol
     grid.enPassantSquare = None
-    if (toCell.isSet && toCell.value.get.toSimpleString == "K") {
+    if (toCell.isSet && toCell.value.get.toShortcut == "K") {
       if (toCell.value.get.isWhite) MovementResult.WHITEKINGTAKEN else MovementResult.BLACKKINGTAKEN
     } else {
       MovementResult.SUCCESS

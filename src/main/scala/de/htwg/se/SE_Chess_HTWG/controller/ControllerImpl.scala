@@ -21,17 +21,23 @@ class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterf
   val undoManager: UndoManager = new UndoManagerImpl(grid)
   var gameStatus: GameStatus = IDLE
 
-  override def gridToString: String = grid.toString
-
   override def createNewGrid: Unit = {
     grid = grid.createNewGridWithPieces
     gameStatus = PLAYER1TURN
     publish(new CellChanged)
   }
 
-  override def selectSquare(row: Int, col: Int): Unit = grid.selectedSquare = Some((row, col))
-  override def deselectSquare: Unit = grid.selectedSquare = None
   override def getSelectedSquare: Option[(Int, Int)] = grid.selectedSquare
+
+  override def selectSquare(row: Int, col: Int): Unit = {
+    grid.selectedSquare = Some((row, col))
+    publish(new CellChanged)
+  }
+
+  override def deselectSquare: Unit = {
+    grid.selectedSquare = None
+    publish(new CellChanged)
+  }
 
   override def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult = {
     val move: Move = new Move(grid, fromRow, fromCol, toRow, toCol)
@@ -101,4 +107,6 @@ class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterf
     gameStatus = loadResult._2
     publish(new CellChanged)
   }
+
+  override def gridToString: String = grid.toString
 }

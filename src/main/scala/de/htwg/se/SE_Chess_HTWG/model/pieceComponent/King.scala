@@ -6,7 +6,7 @@ import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
 
 private[pieceComponent] case class King(color: PieceColor, var row: Int, var col: Int, var hasMoved: Boolean = false) extends Piece {
   override def toString: String = if (isWhite) "\u2654" else "\u265A"
-  override def toSimpleString: String = "K"
+  override def toShortcut: String = "K"
   override def getImageName: String = if (isWhite) "king_w" else "king_b"
 
   def getPossibleSquares(grid: GridInterface): List[Cell] = {

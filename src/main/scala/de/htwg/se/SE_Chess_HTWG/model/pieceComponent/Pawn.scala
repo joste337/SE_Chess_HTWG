@@ -8,7 +8,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 private[pieceComponent] case class Pawn(color: PieceColor, var row: Int, var col: Int, var hasMoved: Boolean = false) extends Piece {
   override def toString: String = if (isWhite) "\u2659" else "\u265F"
-  override def toSimpleString: String = "P"
+  override def toShortcut: String = "P"
   override def getImageName: String = if (isWhite) "pawn_w" else "pawn_b"
 
   override def executeMove(grid: GridInterface, move: Move): MovementResult = {

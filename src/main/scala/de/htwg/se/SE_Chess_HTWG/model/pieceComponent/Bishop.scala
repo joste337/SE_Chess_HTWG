@@ -6,7 +6,7 @@ import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
 
 private[pieceComponent] case class Bishop(color: PieceColor, var row: Int, var col: Int, var hasMoved: Boolean = false) extends Piece {
   override def toString: String = if (isWhite) "\u2657" else "\u265D"
-  override def toSimpleString: String = "B"
+  override def toShortcut: String = "B"
   override def getImageName: String = if (isWhite) "bishop_w" else "bishop_b"
 
   def getPossibleSquares(grid: GridInterface): List[Cell] = {

@@ -54,7 +54,7 @@ class FileIOXmlImpl extends FileIOInterface {
 
   def pieceToXml(piece: Piece) = {
     <piece row ={piece.row.toString} col={piece.col.toString} isWhite={piece.isWhite.toString} hasMoved={piece.hasMoved.toString}>
-      {piece.toSimpleString}
+      {piece.toShortcut}
     </piece>
   }
 }
