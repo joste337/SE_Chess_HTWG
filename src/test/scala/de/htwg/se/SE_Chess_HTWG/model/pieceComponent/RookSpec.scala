@@ -13,7 +13,7 @@ class RookSpec extends WordSpec with Matchers {
   val col: Int = 6
 
   "A Rook on testgrid" when { "get available moves" should {
-    val rook: PieceInterface = testGrid.getCell(row, col).value.get
+    val rook: Piece = testGrid.getCell(row, col).value.get
     "contain all possible moves" in {
       Set(testGrid.getCell(2, 0), testGrid.getCell(2, 1), testGrid.getCell(2, 3),
         testGrid.getCell(2, 4), testGrid.getCell(2, 5), testGrid.getCell(2, 7),

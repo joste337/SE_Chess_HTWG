@@ -2,7 +2,7 @@ package de.htwg.se.SE_Chess_HTWG.model.gridComponent
 
 import com.google.inject.Guice
 import de.htwg.se.SE_Chess_HTWG.ChessModule
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{Piece, PieceFactory, Rook}
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{PieceType, PieceFactory, Rook}
 import org.scalatest._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -39,7 +39,7 @@ class CellSpec extends WordSpec with Matchers {
   }}
 
   "A Cell" when { "new with black and a rook" should {
-    val cell = Cell(Some(pieceFactory.getPiece(Piece.ROOK, true, 1, 1, false)), false, false)
+    val cell = Cell(Some(pieceFactory.getPiece(PieceType.ROOK, true, 1, 1, false)), false, false)
     "be set" in {
       cell.isSet should be(true)
     }

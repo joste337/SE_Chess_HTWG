@@ -13,7 +13,7 @@ class BishopSpec extends WordSpec with Matchers {
   val col: Int = 1
 
   "A Bishop on testgrid" when { "get available moves" should {
-    val bishop: PieceInterface = testGrid.getCell(row, col).value.get
+    val bishop: Piece = testGrid.getCell(row, col).value.get
     "contain all possible moves" in {
       Set(testGrid.getCell(7, 0), testGrid.getCell(5, 0), testGrid.getCell(7, 2),
         testGrid.getCell(5, 2), testGrid.getCell(4, 3), testGrid.getCell(3, 4),

@@ -2,7 +2,7 @@ package de.htwg.se.SE_Chess_HTWG.model.gridComponent
 
 import com.google.inject.Guice
 import de.htwg.se.SE_Chess_HTWG.ChessModule
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{King, Piece, PieceFactory, PieceInterface}
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{King, PieceType, PieceFactory, Piece}
 import de.htwg.se.SE_Chess_HTWG.testUtil.TestGrid
 import de.htwg.se.SE_Chess_HTWG.util.ColumnMatcher
 import org.junit.runner.RunWith

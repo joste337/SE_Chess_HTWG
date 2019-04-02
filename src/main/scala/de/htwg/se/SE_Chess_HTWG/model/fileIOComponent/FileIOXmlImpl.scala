@@ -5,7 +5,7 @@ import com.google.inject.Guice
 import de.htwg.se.SE_Chess_HTWG.ChessModule
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus
 import de.htwg.se.SE_Chess_HTWG.controller.GameStatus.GameStatus
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{PieceFactory, PieceInterface}
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{PieceFactory, Piece}
 
 import scala.xml.PrettyPrinter
 
@@ -38,7 +38,7 @@ class FileIOXmlImpl extends FileIOInterface {
       val value: String = piece.text.trim
       val isWhite: Boolean = (piece \ "@isWhite").text.toBoolean
       val hasMoved: Boolean = (piece \ "@hasMoved").text.toBoolean
-      grid.getCell(row, col).value = Some(pieceFactory.getPiece(PieceInterface.getPieceTypeFromString(value), isWhite, row, col, hasMoved))
+      grid.getCell(row, col).value = Some(pieceFactory.getPiece(Piece.getPieceTypeFromString(value), isWhite, row, col, hasMoved))
     }
 
     (grid, gameStatus)
@@ -52,7 +52,7 @@ class FileIOXmlImpl extends FileIOInterface {
     </game>
   }
 
-  def pieceToXml(piece: PieceInterface) = {
+  def pieceToXml(piece: Piece) = {
     <piece row ={piece.row.toString} col={piece.col.toString} isWhite={piece.isWhite.toString} hasMoved={piece.hasMoved.toString}>
       {piece.toSimpleString}
     </piece>

@@ -21,7 +21,7 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
 
   val label =
     new Label {
-      if (controller.grid.getCell(row, col).isSet) icon = new ImageIcon(piecesImgBasePath + controller.grid.getCell(row, col).value.get.imageName + ".png")
+      if (controller.grid.getCell(row, col).isSet) icon = new ImageIcon(piecesImgBasePath + controller.grid.getCell(row, col).value.get.getImageName + ".png")
     }
 
   val cell = new BoxPanel(Orientation.Vertical) { //Horizontal) {
@@ -35,7 +35,7 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
     reactions += {
       case e: CellChanged => {
         if (controller.grid.getCell(row, col).isSet) {
-          label.icon = new ImageIcon(piecesImgBasePath + controller.grid.getCell(row, col).value.get.imageName + ".png")
+          label.icon = new ImageIcon(piecesImgBasePath + controller.grid.getCell(row, col).value.get.getImageName + ".png")
         } else {
           label.icon = null
         }

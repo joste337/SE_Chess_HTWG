@@ -5,10 +5,10 @@ import de.htwg.se.SE_Chess_HTWG.model.movement.{Move, MovementHelper}
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-private[pieceComponent] class Queen(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface {
+private[pieceComponent] case class Queen(isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends Piece {
   override def toString: String = if (isWhite) "\u2655" else "\u265B"
   override def toSimpleString: String = "Q"
-  val imageName = if (isWhite) "queen_w" else "queen_b"
+  override def getImageName: String = if (isWhite) "queen_w" else "queen_b"
 
   def executeMove(grid: GridInterface, move: Move): MovementResult = {
     if (getPossibleSquares(grid) contains move.getToCell) move.doMove() else MovementResult.ERROR

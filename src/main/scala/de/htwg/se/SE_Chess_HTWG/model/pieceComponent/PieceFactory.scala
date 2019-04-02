@@ -1,20 +1,20 @@
 package de.htwg.se.SE_Chess_HTWG.model.pieceComponent
 
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.Piece.Piece
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceType.PieceType
 
 trait PieceFactory {
-  def getPiece(pieceSimpleString: Piece, isWhite: Boolean, row: Int, col: Int, hasMoved: Boolean = false): PieceInterface
+  def getPiece(pieceType: PieceType, isWhite: Boolean, row: Int, col: Int, hasMoved: Boolean = false): Piece
 }
 
 class PieceFactoryImpl extends PieceFactory {
-  def getPiece(pieceSimpleString: Piece, isWhite: Boolean, row: Int, col: Int, hasMoved: Boolean = false): PieceInterface = {
-    pieceSimpleString match {
-      case Piece.PAWN => new Pawn(isWhite, row, col, hasMoved)
-      case Piece.ROOK => new Rook(isWhite, row, col, hasMoved)
-      case Piece.KNIGHT => new Knight(isWhite, row, col, hasMoved)
-      case Piece.BISHOP => new Bishop(isWhite, row, col, hasMoved)
-      case Piece.QUEEN => new Queen(isWhite, row, col, hasMoved)
-      case Piece.KING => new King(isWhite, row, col, hasMoved)
+  def getPiece(pieceType: PieceType, isWhite: Boolean, row: Int, col: Int, hasMoved: Boolean = false): Piece = {
+    pieceType match {
+      case PieceType.PAWN => Pawn(isWhite, row, col, hasMoved)
+      case PieceType.ROOK => Rook(isWhite, row, col, hasMoved)
+      case PieceType.KNIGHT => Knight(isWhite, row, col, hasMoved)
+      case PieceType.BISHOP => Bishop(isWhite, row, col, hasMoved)
+      case PieceType.QUEEN => Queen(isWhite, row, col, hasMoved)
+      case PieceType.KING => King(isWhite, row, col, hasMoved)
     }
   }
 }

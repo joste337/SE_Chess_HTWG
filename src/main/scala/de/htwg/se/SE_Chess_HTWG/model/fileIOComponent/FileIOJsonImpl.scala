@@ -39,7 +39,7 @@ class FileIOJsonImpl extends FileIOInterface {
       val value = (json \\ "value") (i).as[String]
       val isWhite = (json \\ "isWhite") (i).as[Boolean]
       val hasMoved = (json \\ "hasMoved") (i).as[Boolean]
-      grid.getCell(row, col).value = Some(pieceFactory.getPiece(PieceInterface.getPieceTypeFromString(value), isWhite, row, col, hasMoved))
+      grid.getCell(row, col).value = Some(pieceFactory.getPiece(Piece.getPieceTypeFromString(value), isWhite, row, col, hasMoved))
     }
 
     (grid, gameStatus)
