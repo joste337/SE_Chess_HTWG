@@ -29,7 +29,7 @@ class FileIOXmlImpl extends FileIOInterface {
     val gameStatus = GameStatus.fromInputString((source \\ "game" \ "@status").text)
     val injector = Guice.createInjector(new ChessModule)
     var grid = injector.getInstance(classOf[GridInterface])
-    grid = grid.createNewGridWithoutPieces
+    grid.createNewGrid
 
     val pieces = (source \\ "piece")
     for (piece <- pieces) {

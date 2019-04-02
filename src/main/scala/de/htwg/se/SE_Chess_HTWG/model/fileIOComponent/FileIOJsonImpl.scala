@@ -30,7 +30,7 @@ class FileIOJsonImpl extends FileIOInterface {
     val gameStatus = GameStatus.fromInputString((json \ "game" \ "status").as[String])
     val injector = Guice.createInjector(new ChessModule)
     var grid = injector.getInstance(classOf[GridInterface])
-    grid = grid.createNewGridWithoutPieces
+    grid.createNewGrid
 
     val numberOfPieces = (json \\ "row").size
     for (i <- 0 until numberOfPieces) {

@@ -4,16 +4,13 @@ import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
 import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.Piece
 
 trait UndoManager {
-  var undoStack: List[((Int, Int, Option[Piece]), (Int, Int, Option[Piece]))]
-  var redoStack: List[((Int, Int, Option[Piece]), (Int, Int, Option[Piece]))]
+  var undoStack: List[((Int, Int, Option[Piece]), (Int, Int, Option[Piece]))] = Nil
+  var redoStack: List[((Int, Int, Option[Piece]), (Int, Int, Option[Piece]))] = Nil
   def undoMove: Unit
   def redoMove: Unit
 }
 
-class UndoManagerImpl(var grid: GridInterface) extends UndoManager {
-  var undoStack: List[((Int, Int, Option[Piece]), (Int, Int, Option[Piece]))] = Nil
-  var redoStack: List[((Int, Int, Option[Piece]), (Int, Int, Option[Piece]))] = Nil
-
+class UndoManagerImpl(val grid: GridInterface) extends UndoManager {
   def undoMove: Unit = {
     val cells: ((Int, Int, Option[Piece]), (Int, Int,Option[Piece])) = undoStack.head
     undoStack = undoStack.tail

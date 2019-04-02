@@ -14,8 +14,7 @@ trait GridInterface {
   def replaceColor(row: Int, col: Int, isWhite: Boolean): Matrix
   def replaceValue(row: Int, col: Int, value: Option[Piece]): Matrix
   def movePiece(move: Move): MovementResult
-  def createNewGridWithPieces: GridInterface
-  def createNewGridWithoutPieces: GridInterface
+  def createNewGrid: Unit
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
   def getPieceForColumn(row: Int, col: Int, isWhite: Boolean): Piece
 }

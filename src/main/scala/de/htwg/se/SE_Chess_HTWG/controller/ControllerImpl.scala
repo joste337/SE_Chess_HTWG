@@ -22,7 +22,7 @@ class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterf
   var gameStatus: GameStatus = IDLE
 
   override def createNewGrid: Unit = {
-    grid = grid.createNewGridWithPieces
+    grid.createNewGrid
     gameStatus = PLAYER1TURN
     publish(new CellChanged)
   }

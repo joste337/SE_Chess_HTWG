@@ -11,10 +11,10 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 import scala.math.abs
 
 class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
+  val BOARD_SIZE: Int = 8
   var enPassantSquare: Option[Cell] = None
   var promotionSquare: Option[Cell] = None
   var selectedSquare: Option[(Int, Int)] = None
-  val BOARD_SIZE: Int = 8
   val injector = Guice.createInjector(new ChessModule)
   val pieceFactory: PieceFactory = injector.getInstance(classOf[PieceFactory])
 
@@ -30,22 +30,26 @@ class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
 
   def getSetCells(): List[Cell] = cells.getSetCells
 
-  override def createNewGridWithPieces: GridInterface = {
-    createNewGrid
-    setUpPieces
-    this
-  }
-
-  override def createNewGridWithoutPieces: GridInterface = {
-    createNewGrid
-    this
-  }
-
   def createNewGrid(): Unit = {
+    createEmptyGrid()
+    setUpPieces()
+  }
+
+  def createEmptyGrid(): Unit = {
     for {
       row <- 0 until BOARD_SIZE
       col <- 0 until BOARD_SIZE
     } if ((row + col) % 2 != 0) cells = replaceColor(row, col, true)
+  }
+
+  def setUpPieces(): Unit = {
+    for (col <- 0 until BOARD_SIZE) {
+      setCells(replaceValue(1, col, Some(pieceFactory.getPiece(PieceType.PAWN, true, 1, col))))
+      setCells(replaceValue(0, col, Some(getPieceForColumn(0, col, true))))
+
+      setCells(replaceValue(6, col, Some(pieceFactory.getPiece(PieceType.PAWN,false, 6, col))))
+      setCells(replaceValue(7, col, Some(getPieceForColumn(7, col, false))))
+    }
   }
 
   override def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {
@@ -66,16 +70,6 @@ class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
       case "N" => Some(pieceFactory.getPiece(PieceType.KNIGHT, isWhite, row, col))
       case "B" => Some(pieceFactory.getPiece(PieceType.BISHOP, isWhite, row, col))
       case _ => None
-    }
-  }
-
-  def setUpPieces(): Unit = {
-    for (col <- 0 until BOARD_SIZE) {
-      setCells(replaceValue(1, col, Some(pieceFactory.getPiece(PieceType.PAWN, true, 1, col))))
-      setCells(replaceValue(0, col, Some(getPieceForColumn(0, col, true))))
-
-      setCells(replaceValue(6, col, Some(pieceFactory.getPiece(PieceType.PAWN,false, 6, col))))
-      setCells(replaceValue(7, col, Some(getPieceForColumn(7, col, false))))
     }
   }
 

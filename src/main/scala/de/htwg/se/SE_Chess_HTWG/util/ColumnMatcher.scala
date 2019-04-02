@@ -1,9 +1,6 @@
 package de.htwg.se.SE_Chess_HTWG.util
 
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent._
-
 object ColumnMatcher {
-  // Hilfsmethode um die Randannotationen am Brett zu setzen
   def matchColToLetter(number: Int): String = {
     number match {
       case 0 => "a  "  //a
