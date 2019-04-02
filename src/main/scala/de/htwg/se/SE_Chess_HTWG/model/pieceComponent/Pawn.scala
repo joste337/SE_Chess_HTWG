@@ -2,15 +2,16 @@ package de.htwg.se.SE_Chess_HTWG.model.pieceComponent
 
 import de.htwg.se.SE_Chess_HTWG.model.movement.Move
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult
 import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
-private[pieceComponent] case class Pawn(isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends Piece {
+private[pieceComponent] case class Pawn(color: PieceColor, var row: Int, var col: Int, var hasMoved: Boolean = false) extends Piece {
   override def toString: String = if (isWhite) "\u2659" else "\u265F"
   override def toSimpleString: String = "P"
   override def getImageName: String = if (isWhite) "pawn_w" else "pawn_b"
 
-  def executeMove(grid: GridInterface, move: Move): MovementResult = {
+  override def executeMove(grid: GridInterface, move: Move): MovementResult = {
     if (getEnPassantMove(grid) == move.getToCell) {
       doEnPassantMove(grid, move)
     } else if (getFirstTwoSquareMove(grid) == move.getToCell) {
