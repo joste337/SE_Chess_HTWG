@@ -9,12 +9,12 @@ trait GridInterface {
   var promotionSquare: Option[Cell]
   var selectedSquare: Option[(Int, Int)]
   def getCell(row: Int, col: Int): Cell
-  def setCells(cells: Matrix): Unit
+  def setCells(cells: Matrix): GridInterface
   def getSetCells(): List[Cell]
-  def replaceColor(row: Int, col: Int, isWhite: Boolean): Matrix
-  def replaceValue(row: Int, col: Int, value: Option[Piece]): Matrix
+  def replaceColor(row: Int, col: Int, isWhite: Boolean): GridInterface
+  def replaceValue(row: Int, col: Int, value: Option[Piece]): GridInterface
   def movePiece(move: Move): MovementResult
-  def createNewGrid: Unit
+  def createNewGrid: GridInterface
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
   def getPieceForColumn(row: Int, col: Int, isWhite: Boolean): Piece
 }

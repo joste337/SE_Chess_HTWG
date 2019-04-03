@@ -10,7 +10,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 import scala.math.abs
 
-case class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
+case class GridImpl @Inject()(cells: Matrix) extends GridInterface {
   val BOARD_SIZE: Int = 8
   var enPassantSquare: Option[Cell] = None
   var promotionSquare: Option[Cell] = None
@@ -18,40 +18,47 @@ case class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
   val injector = Guice.createInjector(new ChessModule)
   val pieceFactory: PieceFactory = injector.getInstance(classOf[PieceFactory])
 
+  // def setEnPassantSquare(cell: Cell): GridInterface = this.copy(cells, Some(cell))
+
   def getCell(row: Int, col: Int): Cell = cells.cell(row, col)
 
-  def setCells(cells: Matrix): Unit = this.cells = cells
+  def setCells(cells: Matrix): GridInterface = this.copy(cells)
 
-  def replaceColor(row: Int, col: Int, isWhite: Boolean): Matrix = cells.replaceCell(row, col, Cell(getCell(row, col).value, isWhite))
+  def replaceColor(row: Int, col: Int, isWhite: Boolean): GridInterface = this.copy(cells.replaceCell(row, col, Cell(getCell(row, col).value, isWhite)))
 
-  def replaceValue(row: Int, col: Int, value: Option[Piece]): Matrix = cells.replaceCell(row, col, Cell(value, getCell(row, col).isWhite))
+  def replaceValue(row: Int, col: Int, value: Option[Piece]): GridInterface = this.copy(cells.replaceCell(row, col, Cell(value, getCell(row, col).isWhite)))
 
   def movePiece(move: Move): MovementResult = move.executeMove
 
   def getSetCells(): List[Cell] = cells.getSetCells
 
-  def createNewGrid(): Unit = {
-    createEmptyGrid()
-    setUpPieces()
+  def createNewGrid(): GridInterface = {
+    var returnGrid: GridInterface = createEmptyGrid(this)
+    returnGrid = setUpPieces(returnGrid)
+    returnGrid
   }
 
-  def createEmptyGrid(): Unit = {
+  def createEmptyGrid(grid: GridInterface): GridInterface = {
+    var returnGrid: GridInterface = grid
     val toReplaceCells = for {
       row <- 0 until BOARD_SIZE
       col <- 0 until BOARD_SIZE
       if (row + col) % 2 != 0
     } yield (row, col)
-    toReplaceCells.foreach(cell => cells = replaceColor(cell._1, cell._2, true)
+    toReplaceCells.foreach(cell => returnGrid = returnGrid.replaceColor(cell._1, cell._2, true))
+    returnGrid
   }
 
-  def setUpPieces(): Unit = {
+  def setUpPieces(grid: GridInterface): GridInterface = {
+    var returnGrid: GridInterface = grid
     for (col <- 0 until BOARD_SIZE) {
-      setCells(replaceValue(1, col, Some(pieceFactory.getPiece(PieceType.PAWN, true, 1, col))))
-      setCells(replaceValue(0, col, Some(getPieceForColumn(0, col, true))))
+      returnGrid = returnGrid.replaceValue(1, col, Some(pieceFactory.getPiece(PieceType.PAWN, true, 1, col)))
+      returnGrid = returnGrid.replaceValue(0, col, Some(getPieceForColumn(0, col, true)))
 
-      setCells(replaceValue(6, col, Some(pieceFactory.getPiece(PieceType.PAWN,false, 6, col))))
-      setCells(replaceValue(7, col, Some(getPieceForColumn(7, col, false))))
+      returnGrid = returnGrid.replaceValue(6, col, Some(pieceFactory.getPiece(PieceType.PAWN,false, 6, col)))
+      returnGrid = returnGrid.replaceValue(7, col, Some(getPieceForColumn(7, col, false)))
     }
+    returnGrid
   }
 
   override def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {

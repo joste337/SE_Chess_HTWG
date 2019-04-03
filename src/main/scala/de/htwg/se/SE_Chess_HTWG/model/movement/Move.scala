@@ -17,8 +17,8 @@ class Move (var grid: GridInterface, val fromRow:Int, val fromCol: Int, val toRo
   def doMove(): MovementResult = {
     val fromCell = getFromCell
     val toCell = getToCell
-    grid.setCells(grid.replaceValue(toRow, toCol, fromCell.value))
-    grid.setCells(grid.replaceValue(fromRow, fromCol, None))
+    grid = grid.replaceValue(toRow, toCol, fromCell.value)
+    grid = grid.replaceValue(fromRow, fromCol, None)
     fromCell.value.get.hasMoved = true
     fromCell.value.get.row = toRow
     fromCell.value.get.col = toCol

@@ -29,12 +29,12 @@ object TestGrid {
     } if ((row + col) % 2 != 0) cells = cells.replaceCell(row, col, Cell(None, true))
     grid.setCells(cells)
 
-    grid.setCells(grid.replaceValue(1, 0, Some(pieceFactory.getPiece(PieceType.PAWN, true, 1, 0, false))))
-    grid.setCells(grid.replaceValue(1, 7, Some(pieceFactory.getPiece(PieceType.QUEEN,true, 1, 7, true))))
-    grid.setCells(grid.replaceValue(2, 6, Some(pieceFactory.getPiece(PieceType.ROOK,true, 2, 6, true))))
-    grid.setCells(grid.replaceValue(3, 5, Some(pieceFactory.getPiece(PieceType.KING,true, 3, 5, true))))
-    grid.setCells(grid.replaceValue(6, 1, Some(pieceFactory.getPiece(PieceType.BISHOP,true, 6, 1, true))))
-    grid.setCells(grid.replaceValue(5, 3, Some(pieceFactory.getPiece(PieceType.KNIGHT,true, 5, 3, true))))
+    grid.replaceValue(1, 0, Some(pieceFactory.getPiece(PieceType.PAWN, true, 1, 0, false)))
+    grid.replaceValue(1, 7, Some(pieceFactory.getPiece(PieceType.QUEEN,true, 1, 7, true)))
+    grid.replaceValue(2, 6, Some(pieceFactory.getPiece(PieceType.ROOK,true, 2, 6, true)))
+    grid.replaceValue(3, 5, Some(pieceFactory.getPiece(PieceType.KING,true, 3, 5, true)))
+    grid.replaceValue(6, 1, Some(pieceFactory.getPiece(PieceType.BISHOP,true, 6, 1, true)))
+    grid.replaceValue(5, 3, Some(pieceFactory.getPiece(PieceType.KNIGHT,true, 5, 3, true)))
 
     grid
   }
