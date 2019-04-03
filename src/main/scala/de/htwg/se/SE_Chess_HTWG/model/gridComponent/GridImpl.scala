@@ -10,7 +10,7 @@ import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 import scala.math.abs
 
-class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
+case class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
   val BOARD_SIZE: Int = 8
   var enPassantSquare: Option[Cell] = None
   var promotionSquare: Option[Cell] = None
@@ -36,10 +36,12 @@ class GridImpl @Inject()(var cells: Matrix) extends GridInterface {
   }
 
   def createEmptyGrid(): Unit = {
-    for {
+    val toReplaceCells = for {
       row <- 0 until BOARD_SIZE
       col <- 0 until BOARD_SIZE
-    } if ((row + col) % 2 != 0) cells = replaceColor(row, col, true)
+      if (row + col) % 2 != 0
+    } yield (row, col)
+    toReplaceCells.foreach(cell => cells = replaceColor(cell._1, cell._2, true)
   }
 
   def setUpPieces(): Unit = {

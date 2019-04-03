@@ -16,7 +16,6 @@ class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterf
 
   val log : Logger = LoggerFactory.getLogger(this.getClass)
   val injector = Guice.createInjector(new ChessModule)
-  var clickedCell: Option[(Int, Int)] = None
   val fileIo: FileIOInterface = injector.getInstance(classOf[FileIOInterface])
   val undoManager: UndoManager = new UndoManagerImpl(grid)
   var gameStatus: GameStatus = IDLE

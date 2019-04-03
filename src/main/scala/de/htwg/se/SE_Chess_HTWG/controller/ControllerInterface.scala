@@ -8,7 +8,7 @@ import scala.swing.Publisher
 import scala.swing.event.Event
 
 trait ControllerInterface extends Publisher {
-  var clickedCell: Option[(Int, Int)]
+  var grid: GridInterface
   def gameStatus: GameStatus
   def gridToString: String
   def createNewGrid: Unit
@@ -17,7 +17,6 @@ trait ControllerInterface extends Publisher {
   def getSelectedSquare: Option[(Int, Int)]
   def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult
   def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
-  var grid: GridInterface
   def undo: Unit
   def redo: Unit
   def save: Unit
