@@ -69,6 +69,36 @@ class WebServer(controller: ControllerInterface) {
         controller.load()
         complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<pre>" + controller.gridString +"</pre>"))
       }
+    }~
+    path("chess" / "create") {
+      get {
+        controller.dbCreate()
+        complete((StatusCodes.Accepted, "Created new entry.\n"))
+      }
+    }~
+    path("chess" / "read") {
+      get {
+        parameter("id".as[Int]) { id =>
+          controller.dbRead(id)
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<pre>" + controller.gridString + "</pre>"))
+        }
+      }
+    }~
+    path("chess" / "update") {
+      put {
+        parameter("id".as[Int]) { id =>
+          controller.dbUpdate(id)
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<pre>" + controller.gridString + "</pre>"))
+        }
+      }
+    }~
+    path("chess" / "delete") {
+      put {
+        parameter("id".as[Int]) { id =>
+          controller.dbDelete(id)
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<pre>" + controller.gridString  + "</pre>"))
+        }
+      }
     }
   }
 
