@@ -1,10 +1,12 @@
 package de.htwg.se.SE_Chess_HTWG.controller
 
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.Square
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{GridInterface, Square}
 
 import scala.swing.Publisher
 
 trait ControllerInterface extends Publisher {
+  var grid: GridInterface
+
   def gridString: String
   def getSquare(row: Int, col: Int): Square
   def createNewGrid: Unit
