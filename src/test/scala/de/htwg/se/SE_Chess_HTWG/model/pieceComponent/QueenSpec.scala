@@ -30,7 +30,7 @@ class QueenSpec extends WordSpec with Matchers {
         testGrid.getCell(1, 6), testGrid.getCell(2, 7), testGrid.getCell(3, 7),
         testGrid.getCell(4, 7), testGrid.getCell(5, 7), testGrid.getCell(6, 7),
         testGrid.getCell(7, 7)
-      ).subsetOf(queen.getPossibleSquares(testGrid).toSet) should be(true)
+      ).subsetOf(queen.getPossibleMoves(testGrid, testGrid.turnStatus).toSet) should be(true)
     }
   }}
 }

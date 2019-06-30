@@ -1,97 +1,59 @@
 package de.htwg.se.SE_Chess_HTWG.model.gridComponent
 
-import com.google.inject.{Guice, Inject}
-import de.htwg.se.SE_Chess_HTWG.ChessModule
-import de.htwg.se.SE_Chess_HTWG.model.movement.Move
+import com.google.inject.Inject
+import de.htwg.se.SE_Chess_HTWG.model.moveComponent.MoveExecutor
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
 import de.htwg.se.SE_Chess_HTWG.model.pieceComponent._
-import de.htwg.se.SE_Chess_HTWG.util.ColumnMatcher._
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 
 import scala.math.abs
 
-case class GridImpl @Inject()(cells: Matrix) extends GridInterface {
+case class GridImpl @Inject()(cells: Matrix, specialSquares: SpecialSquares, turnStatus: TurnStatus) extends GridInterface {
   val BOARD_SIZE: Int = 8
-  var enPassantSquare: Option[Cell] = None
-  var promotionSquare: Option[Cell] = None
-  var selectedSquare: Option[(Int, Int)] = None
-  val injector = Guice.createInjector(new ChessModule)
-  val pieceFactory: PieceFactory = injector.getInstance(classOf[PieceFactory])
+  val pieceFactory: PieceFactory = new PieceFactoryImpl
 
-  // def setEnPassantSquare(cell: Cell): GridInterface = this.copy(cells, Some(cell))
+  def createNewGrid: GridImpl = setUpPieces.setTurnStatus(TurnStatus(Turn.P1))
 
-  def getCell(row: Int, col: Int): Cell = cells.cell(row, col)
+  def getCell(square: (Int, Int)): Square = cells.getCell(square._1, square._2)
 
-  def setCells(cells: Matrix): GridInterface = this.copy(cells)
+  def replacePiece(row: Int, col: Int, value: Option[Piece]): GridImpl = copy(cells.replaceValue(row, col, value))
+  def replacePiece(square: (Int, Int), value: Option[Piece]): GridImpl = copy(cells.replaceValue(square._1, square._2, value))
 
-  def replaceColor(row: Int, col: Int, isWhite: Boolean): GridInterface = this.copy(cells.replaceCell(row, col, Cell(getCell(row, col).value, isWhite)))
+  def moveFromSelectedSquare(destSquare: (Int, Int)): GridImpl = replacePiece(destSquare, getCell(specialSquares.selectedSquare.get).value).replacePiece(specialSquares.selectedSquare.get, None)
+  def executeMove(row: Int, col: Int): GridImpl = new MoveExecutor(this).executeMove(row, col)
+  def replaceSelectedSquare(square: (Int, Int)): GridImpl = copy(cells, specialSquares.replaceSelectedSquare(Some(square)))
+  def resetSelectedSquare(): GridImpl = copy(cells, specialSquares.replaceSelectedSquare(None))
+  def squareIsSelected(): Boolean = !specialSquares.selectedSquare.isEmpty
 
-  def replaceValue(row: Int, col: Int, value: Option[Piece]): GridInterface = this.copy(cells.replaceCell(row, col, Cell(value, getCell(row, col).isWhite)))
+  def setTurnStatus(turnStatus: TurnStatus): GridImpl = copy(cells, specialSquares, turnStatus)
+  def nextTurn(): GridImpl = setTurnStatus(turnStatus.nextTurn())
 
-  def movePiece(move: Move): MovementResult = move.executeMove
+  def unhighlightAll(): GridImpl = copy(cells.unhighlightAll(), specialSquares)
+  def highlightSquares(squares: List[Square]): GridImpl = if (squares.isEmpty) this else highlightSquare(squares.head.row, squares.head.col).highlightSquares(squares.tail)
+  def highlightSquare(square: (Int, Int)): GridImpl = copy(cells.highlight(square._1, square._2))
 
-  def getSetCells(): List[Cell] = cells.getSetCells
 
-  def createNewGrid(): GridInterface = {
-    var returnGrid: GridInterface = createEmptyGrid(this)
-    returnGrid = setUpPieces(returnGrid)
-    returnGrid
-  }
-
-  def createEmptyGrid(grid: GridInterface): GridInterface = {
-    var returnGrid: GridInterface = grid
-    val toReplaceCells = for {
-      row <- 0 until BOARD_SIZE
-      col <- 0 until BOARD_SIZE
-      if (row + col) % 2 != 0
-    } yield (row, col)
-    toReplaceCells.foreach(cell => returnGrid = returnGrid.replaceColor(cell._1, cell._2, true))
-    returnGrid
-  }
-
-  def setUpPieces(grid: GridInterface): GridInterface = {
-    var returnGrid: GridInterface = grid
+  def setUpPieces: GridImpl = {
+    var returnGrid = this
     for (col <- 0 until BOARD_SIZE) {
-      returnGrid = returnGrid.replaceValue(1, col, Some(pieceFactory.getPiece(PieceType.PAWN, true, 1, col)))
-      returnGrid = returnGrid.replaceValue(0, col, Some(getPieceForColumn(0, col, true)))
+      returnGrid = returnGrid.replacePiece(1, col, Some(pieceFactory.getPiece(PieceType.PAWN, PieceColor.WHITE, getCell((1, col)))))
+      returnGrid = returnGrid.replacePiece(0, col, Some(getPieceForColumn(0, col, PieceColor.WHITE)))
 
-      returnGrid = returnGrid.replaceValue(6, col, Some(pieceFactory.getPiece(PieceType.PAWN,false, 6, col)))
-      returnGrid = returnGrid.replaceValue(7, col, Some(getPieceForColumn(7, col, false)))
+      returnGrid = returnGrid.replacePiece(6, col, Some(pieceFactory.getPiece(PieceType.PAWN, PieceColor.BLACK, getCell((6, col)))))
+      returnGrid = returnGrid.replacePiece(7, col, Some(getPieceForColumn(7, col, PieceColor.BLACK)))
     }
     returnGrid
   }
 
-  override def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {
-    val promotionPiece: Option[Piece] = getPromotionPieceFromPieceShortcut(row, col, pieceShortcut, getCell(row, col).value.get.isWhite)
-
-    if (promotionPiece.isDefined && promotionSquare.isDefined && promotionSquare.get.value.get.isOnRowAndCol(row, col)) {
-      replaceValue(row, col, promotionPiece)
-      MovementResult.SUCCESS
-    } else {
-      MovementResult.ERROR
-    }
-  }
-
-  def getPromotionPieceFromPieceShortcut(row: Int, col: Int, pieceShortcut: String, isWhite: Boolean): Option[Piece] = {
-    pieceShortcut match {
-      case "Q" => Some(pieceFactory.getPiece(PieceType.QUEEN, isWhite, row, col))
-      case "R" => Some(pieceFactory.getPiece(PieceType.ROOK, isWhite, row, col))
-      case "N" => Some(pieceFactory.getPiece(PieceType.KNIGHT, isWhite, row, col))
-      case "B" => Some(pieceFactory.getPiece(PieceType.BISHOP, isWhite, row, col))
-      case _ => None
-    }
-  }
-
-  def getPieceForColumn(row: Int, col: Int, isWhite: Boolean): Piece = {
+  def getPieceForColumn(row: Int, col: Int, pieceColor: PieceColor): Piece = {
     col match {
-      case 0 => pieceFactory.getPiece(PieceType.ROOK, isWhite, row, col)
-      case 1 => pieceFactory.getPiece(PieceType.KNIGHT, isWhite, row, col)
-      case 2 => pieceFactory.getPiece(PieceType.BISHOP, isWhite, row, col)
-      case 3 => if (isWhite) pieceFactory.getPiece(PieceType.QUEEN, isWhite, row, col) else pieceFactory.getPiece(PieceType.KING, isWhite, row, col)
-      case 4 => if (isWhite) pieceFactory.getPiece(PieceType.KING, isWhite, row, col) else pieceFactory.getPiece(PieceType.QUEEN, isWhite, row, col)
-      case 5 => pieceFactory.getPiece(PieceType.BISHOP, isWhite, row, col)
-      case 6 => pieceFactory.getPiece(PieceType.KNIGHT, isWhite, row, col)
-      case 7 => pieceFactory.getPiece(PieceType.ROOK, isWhite, row, col)
+      case 0 => pieceFactory.getPiece(PieceType.ROOK, pieceColor, getCell((row, col)))
+      case 1 => pieceFactory.getPiece(PieceType.KNIGHT, pieceColor, getCell((row, col)))
+      case 2 => pieceFactory.getPiece(PieceType.BISHOP, pieceColor, getCell((row, col)))
+      case 3 => if (pieceColor == PieceColor.WHITE) pieceFactory.getPiece(PieceType.QUEEN, pieceColor, getCell((row, col))) else pieceFactory.getPiece(PieceType.KING, pieceColor, getCell((row, col)))
+      case 4 => if (pieceColor == PieceColor.WHITE) pieceFactory.getPiece(PieceType.KING, pieceColor, getCell((row, col))) else pieceFactory.getPiece(PieceType.QUEEN, pieceColor, getCell((row, col)))
+      case 5 => pieceFactory.getPiece(PieceType.BISHOP, pieceColor, getCell((row, col)))
+      case 6 => pieceFactory.getPiece(PieceType.KNIGHT, pieceColor, getCell((row, col)))
+      case 7 => pieceFactory.getPiece(PieceType.ROOK, pieceColor, getCell((row, col)))
     }
   }
 
@@ -108,5 +70,18 @@ case class GridImpl @Inject()(cells: Matrix) extends GridInterface {
     } box = box.replaceFirst("x", getCell(row, col).toString)
       .replaceFirst("_", abs(col - 8).toString).replaceFirst("/", matchColToLetter(col))
     box
+  }
+
+  def matchColToLetter(number: Int): String = {
+    number match {
+      case 0 => "a  "
+      case 1 => "b  "
+      case 2 => "c  "
+      case 3 => "d  "
+      case 4 => "e  "
+      case 5 => "f  "
+      case 6 => "g  "
+      case 7 => "h  "
+    }
   }
 }

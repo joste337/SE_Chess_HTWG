@@ -20,7 +20,7 @@ class RookSpec extends WordSpec with Matchers {
         testGrid.getCell(0, 6), testGrid.getCell(1, 6), testGrid.getCell(3, 6),
         testGrid.getCell(4, 6), testGrid.getCell(5, 6), testGrid.getCell(6, 6),
         testGrid.getCell(7, 6)
-      ).subsetOf(rook.getPossibleSquares(testGrid).toSet) should be(true)
+      ).subsetOf(rook.getPossibleMoves(testGrid, testGrid.turnStatus).toSet) should be(true)
     }
   }}
 }

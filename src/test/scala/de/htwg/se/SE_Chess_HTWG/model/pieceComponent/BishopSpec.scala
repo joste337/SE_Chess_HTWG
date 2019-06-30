@@ -1,6 +1,6 @@
 package de.htwg.se.SE_Chess_HTWG.model.pieceComponent
 
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
 import de.htwg.se.SE_Chess_HTWG.testUtil.TestGrid
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -18,7 +18,7 @@ class BishopSpec extends WordSpec with Matchers {
       Set(testGrid.getCell(7, 0), testGrid.getCell(5, 0), testGrid.getCell(7, 2),
         testGrid.getCell(5, 2), testGrid.getCell(4, 3), testGrid.getCell(3, 4),
         testGrid.getCell(2, 5), testGrid.getCell(1, 6), testGrid.getCell(0, 7)
-      ).subsetOf(bishop.getPossibleSquares(testGrid).toSet) should be(true)
+      ).subsetOf(bishop.getPossibleMoves(testGrid, testGrid.turnStatus).toSet) should be(true)
     }
   }}
 }

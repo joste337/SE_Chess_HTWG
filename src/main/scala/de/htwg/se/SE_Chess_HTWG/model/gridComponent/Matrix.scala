@@ -1,22 +1,26 @@
 package de.htwg.se.SE_Chess_HTWG.model.gridComponent
 
-case class Matrix(rows: Vector[Vector[Cell]]) {
-  def this() = this(Vector.tabulate(8, 8) { (row, col) => Cell(None, false) })
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.CellColor.CellColor
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.Piece
 
-  def cell(row: Int, col: Int): Cell = rows(row)(col)
 
-  def fill(filling: Cell): Matrix = copy(Vector.tabulate(8, 8) { (row, col) => filling })
+case class Matrix(rows: Vector[Vector[Square]]) {
+  def this() = this(Vector.tabulate(8, 8) { (row, col) => Square(None, row, col, if ((row + col) % 2 != 0 ) CellColor.WHITE else CellColor.BLACK) })
 
-  def replaceCell(row: Int, col: Int, cell: Cell): Matrix = copy(rows.updated(row, rows(row).updated(col, cell)))
+  def getCell(row: Int, col: Int): Square = rows(row)(col)
 
-  def getSetCells(): List[Cell] = {
-    var setCells: List[Cell] = Nil
+  def replaceCell(row: Int, col: Int, cell: Square): Matrix = copy(rows.updated(row, rows(row).updated(col, cell)))
+  def replaceValue(row: Int, col: Int, piece: Option[Piece]): Matrix = replaceCell(row, col, getCell(row, col).replaceValue(piece))
+  def replaceColor(row: Int, col: Int, color: CellColor): Matrix = replaceCell(row, col, getCell(row, col).replaceColor(color))
 
+  def highlight(row: Int, col: Int): Matrix = copy(rows.updated(row, rows(row).updated(col, getCell(row, col).highlight())))
+  def unhighlightAll(): Matrix = copy(Vector.tabulate(8, 8) { (row, col) => getCell(row, col).unHighlight() })
+
+  def getSetCells: List[Square] = {
     for {
-      row <- 0 until 8
-      col <- 0 until 8
-    } if (cell(row, col).isSet) setCells = cell(row, col)::setCells
-
-    setCells
+      row <- List.range(0, 8)
+      col <- List.range(0, 8)
+      if getCell(row, col).isSet
+    } yield getCell(row, col)
   }
 }

@@ -1,50 +1,32 @@
 package de.htwg.se.SE_Chess_HTWG.model.pieceComponent
 
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
-import de.htwg.se.SE_Chess_HTWG.model.movement.Move
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{GridInterface, Square, TurnStatus}
 import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceType.PieceType
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
 import play.api.libs.json.{Json, Writes}
 
 trait Piece {
   val color: PieceColor
-  var hasMoved: Boolean
-  var col: Int
-  var row: Int
-  def isWhite: Boolean = if (color == PieceColor.WHITE) true else false
-  def isOnRowAndCol(row: Int, col: Int): Boolean = this.row == row && this.col == col
-  def executeMove(grid: GridInterface, move: Move): MovementResult = if (getPossibleSquares(grid) contains move.getToCell) move.doMove() else MovementResult.ERROR
-  def getPossibleSquares(grid: GridInterface): List[Cell]
+  val square: Square
+  val hasMoved: Boolean
+  def isWhite: Boolean = if (this.color == PieceColor.WHITE) true else false
+  def matchesColor(color: PieceColor): Boolean = this.color == color
+  def replaceSquare(square: Square): Option[Piece] = Some(move(square))
+  def move(square: Square): Piece = copy(color, true, square)
   def toShortcut: String
   def getImageName: String
+  def getPossibleMoves(grid: GridInterface, turnStatus: TurnStatus): List[Square]
+  def copy(color: PieceColor, hasMoved: Boolean = false, square: Square): Piece
 }
 
-object Piece extends Enumeration {
+object Piece {
   implicit val pieceWrites = new Writes[Piece] {
     def writes(piece: Piece) = Json.obj(
-      "row" -> piece.row,
-      "col" -> piece.col,
+      "row" -> piece.square.row,
+      "col" -> piece.square.col,
       "value" -> piece.toShortcut,
-      "color" -> piece.color,
+      "isWhite" -> piece.isWhite,
       "hasMoved" -> piece.hasMoved
     )
-  }
-
-  def getPieceTypeFromString(simpleString: String): PieceType = {
-    simpleString match {
-      case "P" => PieceType.PAWN
-      case "R" => PieceType.ROOK
-      case "N" => PieceType.KNIGHT
-      case "B" => PieceType.BISHOP
-      case "K" => PieceType.KING
-      case "Q" => PieceType.QUEEN
-    }
-  }
-
-  def getPieceColor(isWhite: Boolean): PieceColor = {
-    if (isWhite) PieceColor.WHITE else PieceColor.BLACK
   }
 }
 

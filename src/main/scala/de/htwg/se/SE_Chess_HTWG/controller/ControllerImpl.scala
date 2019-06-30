@@ -1,111 +1,36 @@
 package de.htwg.se.SE_Chess_HTWG.controller
 
-import com.google.inject.{Guice, Inject}
-import org.slf4j.{Logger, LoggerFactory}
+import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.SE_Chess_HTWG.ChessModule
-import de.htwg.se.SE_Chess_HTWG.controller.GameStatus._
 import de.htwg.se.SE_Chess_HTWG.model.fileIOComponent.FileIOInterface
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
-import de.htwg.se.SE_Chess_HTWG.model.movement.Move
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{GridImpl, GridInterface, Square}
+import net.codingwell.scalaguice.InjectorExtensions._
+import play.api.libs.json.Json
 
-import scala.swing.Publisher
+import scala.swing.event.Event
 
-class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterface with Publisher {
+class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterface {
+  val injector: Injector = Guice.createInjector(new ChessModule)
+  val fileIO: FileIOInterface = injector.instance[FileIOInterface]
+  val undoManager = new UndoManagerImpl(grid)
 
-  val log : Logger = LoggerFactory.getLogger(this.getClass)
-  val injector = Guice.createInjector(new ChessModule)
-  val fileIo: FileIOInterface = injector.getInstance(classOf[FileIOInterface])
-  val undoManager: UndoManager = new UndoManagerImpl(grid)
-  var gameStatus: GameStatus = IDLE
+  override def createNewGrid: Unit = applyMoveResult(grid.createNewGrid)
+  override def selectSquare(row: Int, col: Int): Unit = applyMoveResult(grid.executeMove(row, col))
+  override def getSquare(row: Int, col: Int): Square = grid.getCell(row, col)
+  override def gridString: String = grid.toString
 
-  override def createNewGrid: Unit = {
-    grid = grid.createNewGrid
-    gameStatus = PLAYER1TURN
+  override def save(): Unit = executeAndPublish(() => fileIO.save(grid))
+  override def load(): Unit = executeAndPublish(() => grid = fileIO.load)
+
+  override def undo: Unit = executeAndPublish(() => grid = undoManager.undoMove)
+  override def redo: Unit = executeAndPublish(() => grid = undoManager.redoMove)
+
+  def applyMoveResult(grid: GridImpl): Unit = executeAndPublish(() => this.grid = grid)
+
+  def executeAndPublish(callback: () => Unit): Unit = {
+    callback.apply()
     publish(new CellChanged)
   }
-
-  override def getSelectedSquare: Option[(Int, Int)] = grid.selectedSquare
-
-  override def selectSquare(row: Int, col: Int): Unit = {
-    grid.selectedSquare = Some((row, col))
-    publish(new CellChanged)
-  }
-
-  override def deselectSquare: Unit = {
-    grid.selectedSquare = None
-    publish(new CellChanged)
-  }
-
-  override def movePiece(fromRow: Int, fromCol: Int, toRow: Int, toCol: Int): MovementResult = {
-    val move: Move = new Move(grid, fromRow, fromCol, toRow, toCol)
-
-    val movementResult: MovementResult =
-      if (move.isInGrid && pieceColorMatchesTurnColor(fromRow, fromCol)) {
-        undoManager.undoStack =
-          ((fromRow, fromCol, grid.getCell(fromRow, fromCol).value), (toRow, toCol, grid.getCell(toRow, toCol).value))::undoManager.undoStack
-        grid.movePiece(move)
-      } else {
-        MovementResult.ERROR
-      }
-
-    gameStatus = movementResult match {
-      case MovementResult.SUCCESS => GameStatus.nextPlayer(gameStatus)
-      case MovementResult.PROMOTION => GameStatus.getPromotion(gameStatus)
-      case MovementResult.BLACKKINGTAKEN => IDLE
-      case MovementResult.WHITEKINGTAKEN => IDLE
-      case _ => gameStatus
-    }
-
-    publish(new CellChanged)
-    movementResult
-  }
-
-  def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult = {
-    val movementResult: MovementResult =
-      if (gameStatus == PROMOTIONPLAYER1 || gameStatus == PROMOTIONPLAYER2) {
-        grid.promotePiece(row, col, pieceShortcut)
-      } else  {
-        MovementResult.ERROR
-      }
-
-    movementResult match {
-      case MovementResult.SUCCESS => gameStatus = GameStatus.nextPlayer(gameStatus)
-      case _ =>
-    }
-
-    publish(new CellChanged)
-    movementResult
-  }
-
-  def pieceColorMatchesTurnColor(fromRow: Int, fromCol: Int): Boolean = {
-    val fromCell = grid.getCell(fromRow, fromCol)
-    gameStatus match {
-      case GameStatus.PLAYER1TURN => if (fromCell.isSet && fromCell.value.get.isWhite) true else false
-      case GameStatus.PLAYER2TURN => if (fromCell.isSet && !fromCell.value.get.isWhite) true else false
-      case _ => false
-    }
-  }
-
-  def undo: Unit = {
-    undoManager.undoMove
-    publish(new CellChanged)
-  }
-
-  def redo: Unit = {
-    undoManager.redoMove
-    publish(new CellChanged)
-  }
-
-  def save: Unit = fileIo.save(grid, gameStatus)
-
-  def load: Unit = {
-    val loadResult = fileIo.load
-    grid = loadResult._1
-    gameStatus = loadResult._2
-    publish(new CellChanged)
-  }
-
-  override def gridToString: String = grid.toString
 }
+
+class CellChanged extends Event

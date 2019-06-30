@@ -1,6 +1,6 @@
 package de.htwg.se.SE_Chess_HTWG.util
 
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent._
+import de.htwg.se.SE_Chess_HTWG.aView.tui.ColumnMatcher
 import org.junit.runner.RunWith
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner

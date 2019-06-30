@@ -1,6 +1,7 @@
 package de.htwg.se.SE_Chess_HTWG.aView.gui
 
 import de.htwg.se.SE_Chess_HTWG.controller.{CellChanged, ControllerInterface}
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.CellColor
 import javax.swing.ImageIcon
 
 import scala.swing.Swing.LineBorder
@@ -13,7 +14,7 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
   val cellIsSelected = new Color(200,150,255)
   val piecesImgBasePath = "src/main/scala/de/htwg/se/SE_Chess_HTWG/aView/gui/pieceImgs/"
 
-  def cellText(row: Int, col: Int) = controller.grid.getCell(row, col)
+  def cellText(row: Int, col: Int) = controller.getSquare(row, col)
 
 
   val boardSize = new Dimension(600, 600)
@@ -21,12 +22,12 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
 
   val label =
     new Label {
-      if (controller.grid.getCell(row, col).isSet) icon = new ImageIcon(piecesImgBasePath + controller.grid.getCell(row, col).value.get.getImageName + ".png")
+      if (controller.getSquare(row, col).isSet) icon = new ImageIcon(piecesImgBasePath + controller.getSquare(row, col).value.get.getImageName + ".png")
     }
 
   val cell = new BoxPanel(Orientation.Vertical) { //Horizontal) {
     contents += label
-    background = if (controller.grid.getCell(row, col).isWhite) cellIsWhite else cellIsBlack
+    background = if (controller.getSquare(row, col).color == CellColor.WHITE) cellIsWhite else cellIsBlack
     preferredSize = new Dimension(75, 75) // 600 framesize / 8 cells
     border = LineBorder(java.awt.Color.BLACK, 2)
     border = Swing.BeveledBorder(Swing.Raised)
@@ -34,31 +35,25 @@ class CellPanel(row: Int, col: Int, controller: ControllerInterface) extends Flo
     listenTo(controller)
     reactions += {
       case e: CellChanged => {
-        if (controller.grid.getCell(row, col).isSet) {
-          label.icon = new ImageIcon(piecesImgBasePath + controller.grid.getCell(row, col).value.get.getImageName + ".png")
+        if (controller.getSquare(row, col).isSet) {
+          label.icon = new ImageIcon(piecesImgBasePath + controller.getSquare(row, col).value.get.getImageName + ".png")
         } else {
           label.icon = null
         }
         repaint
       }
       case MouseClicked(src, pt, mod, clicks, pops) => {
-        if (controller.getSelectedSquare.isEmpty) {
-          controller.selectSquare(row, col)
-        } else {
-          val fromRow: Int = controller.getSelectedSquare.get._1
-          val fromCol: Int = controller.getSelectedSquare.get._2
-          controller.movePiece(fromRow, fromCol, row, col)
-          controller.deselectSquare
-        }
+        controller.selectSquare(row, col)
         repaint
       }
     }
   }
   contents += cell
-  
+
   def redraw = {
     contents.clear()
-    cell.background = if (controller.grid.getCell(row, col).isWhite) cellIsWhite else cellIsBlack
+    cell.background = if (controller.getSquare(row, col).color == CellColor.WHITE) cellIsWhite else cellIsBlack
+    if (controller.getSquare(row, col).highlighhted) cell.background = cellIsSelected
     cell.contents += label
     contents += cell
     repaint

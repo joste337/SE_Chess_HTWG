@@ -1,4 +1,4 @@
-package de.htwg.se.SE_Chess_HTWG.util
+package de.htwg.se.SE_Chess_HTWG.aView.tui
 
 object ColumnMatcher {
   def matchColToLetter(number: Int): String = {
