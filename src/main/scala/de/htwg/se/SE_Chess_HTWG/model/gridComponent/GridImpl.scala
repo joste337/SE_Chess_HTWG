@@ -61,7 +61,7 @@ case class GridImpl @Inject()(cells: Matrix, specialSquares: SpecialSquares, tur
     val upperBorder = ("+--" + "--" * BOARD_SIZE) + "--------+\n"
     val fillerLine = "|  " + "  " * BOARD_SIZE + "        |\n"
     val lowerBorder = ("+  " + "/" * (BOARD_SIZE)) + "+\n"  //"+--" "/--" u0336
-    val line = ("_  " + ("x " * BOARD_SIZE)) + "  |\n"
+    val line = ("_  " + ("x " * BOARD_SIZE)) + "   |\n"
     var box = "\n" + (upperBorder + fillerLine + (line * BOARD_SIZE)) + fillerLine + lowerBorder
 
     for {
