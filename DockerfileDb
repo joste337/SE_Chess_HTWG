@@ -1,0 +1,5 @@
+FROM zgwmike/akka-sbt
+WORKDIR /main
+EXPOSE 8070
+ADD . /main
+CMD sbt "runMain de.htwg.se.chess.model.daoComponent.microservice.DaoMicroservice"

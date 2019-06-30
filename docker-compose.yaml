@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  main-service:
+    build:
+      context: .
+      dockerfile: DockerfileApp
+    volumes:
+    - .:/main
+    ports:
+    - 8080:8080
+
+    db-service:
+      build:
+        context: .
+        dockerfile: DockerfileDb
+      volumes:
+      - .:/main
+      ports:
+      - 8070:8070
