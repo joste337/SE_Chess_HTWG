@@ -1,3 +1,5 @@
+enablePlugins(GatlingPlugin)
+
 name          := "SE_Chess_HTWG"
 organization  := "de.htwg.se"
 version       := "0.0.1"
@@ -17,5 +19,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % "2.5.19",
   "com.typesafe.slick" %% "slick" % "3.3.0",
   "com.h2database" % "h2" % "1.4.199",
-  "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0"
+  "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0",
+  "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.3.0" % "test",
+  "io.gatling" % "gatling-test-framework"    % "2.3.0" % "test"
 )
