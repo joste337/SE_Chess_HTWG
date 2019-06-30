@@ -12,8 +12,10 @@ libraryDependencies ++= Seq(
   "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6",
   "com.typesafe.play" %% "play-json" % "2.6.6",
   "org.scalafx" %% "scalafx" % "8.0.144-R12",
-  "org.slf4j" % "slf4j-log4j12" % "1.2",
   "com.typesafe.akka" %% "akka-http"   % "10.1.8",
   "org.scalaj" %% "scalaj-http" % "2.4.2",
-  "com.typesafe.akka" %% "akka-stream" % "2.5.19"
+  "com.typesafe.akka" %% "akka-stream" % "2.5.19",
+  "com.typesafe.slick" %% "slick" % "3.3.0",
+  "com.h2database" % "h2" % "1.4.199",
+  "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0"
 )

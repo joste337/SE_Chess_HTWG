@@ -2,8 +2,9 @@ package de.htwg.se.SE_Chess_HTWG.controller
 
 import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.SE_Chess_HTWG.ChessModule
+import de.htwg.se.SE_Chess_HTWG.model.daoComponent.DAOInterface
 import de.htwg.se.SE_Chess_HTWG.model.fileIOComponent.FileIOInterface
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{GridImpl, GridInterface, Square}
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{GridGenerator, GridImpl, GridInterface, Square}
 import net.codingwell.scalaguice.InjectorExtensions._
 import play.api.libs.json.Json
 
@@ -12,6 +13,7 @@ import scala.swing.event.Event
 class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterface {
   val injector: Injector = Guice.createInjector(new ChessModule)
   val fileIO: FileIOInterface = injector.instance[FileIOInterface]
+  val database: DAOInterface = injector.instance[DAOInterface]
   val undoManager = new UndoManagerImpl(grid)
 
   override def createNewGrid: Unit = applyMoveResult(grid.createNewGrid)
@@ -24,6 +26,11 @@ class ControllerImpl @Inject()(var grid: GridInterface) extends ControllerInterf
 
   override def undo: Unit = executeAndPublish(() => grid = undoManager.undoMove)
   override def redo: Unit = executeAndPublish(() => grid = undoManager.redoMove)
+
+  override def dbCreate(): Unit = executeAndPublish(() => database.create(Json.prettyPrint(GridGenerator.gridToJson(grid))))
+  override def dbRead(id: Int): Unit = executeAndPublish(() => grid = GridGenerator.gridFromJson(database.read(id)))
+  override def dbUpdate(id: Int): Unit = executeAndPublish(() => database.update(id, Json.prettyPrint(GridGenerator.gridToJson(grid))))
+  override def dbDelete(id: Int): Unit = executeAndPublish(() => database.delete(id))
 
   def applyMoveResult(grid: GridImpl): Unit = executeAndPublish(() => this.grid = grid)
 

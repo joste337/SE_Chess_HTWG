@@ -15,4 +15,9 @@ trait ControllerInterface extends Publisher {
 
   def save(): Unit
   def load(): Unit
+
+  def dbCreate(): Unit
+  def dbRead(id: Int): Unit
+  def dbUpdate(id: Int): Unit
+  def dbDelete(id: Int): Unit
 }
