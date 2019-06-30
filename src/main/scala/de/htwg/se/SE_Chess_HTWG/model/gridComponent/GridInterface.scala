@@ -1,27 +1,44 @@
 package de.htwg.se.SE_Chess_HTWG.model.gridComponent
 
-import de.htwg.se.SE_Chess_HTWG.model.movement.Move
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceInterface
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.CellColor.CellColor
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.Piece
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
 
 trait GridInterface {
-  var enPassantSquare: Option[Cell]
-  var promotionSquare: Option[Cell]
-  def getCell(row: Int, col: Int): Cell
-  def setCells(cells: Matrix): Unit
-  def getSetCells(): List[Cell]
-  def replaceColor(row: Int, col: Int, isWhite: Boolean): Matrix
-  def replaceValue(row: Int, col: Int, value: Option[PieceInterface]): Matrix
-  def movePiece(move: Move): MovementResult
-  def createNewGridWithPieces: GridInterface
-  def createNewGridWithoutPieces: GridInterface
-  def promotePiece(row: Int, col: Int, pieceShortcut: String): MovementResult
-  def matchColToPiece(row: Int, col: Int, isWhite: Boolean): PieceInterface
+  val cells: Matrix
+  val specialSquares: SpecialSquares
+  val turnStatus: TurnStatus
+
+  def createNewGrid: GridImpl
+
+  def getCell(square: (Int, Int)): Square
+
+  def replacePiece(row: Int, col: Int, value: Option[Piece]): GridImpl
+  def replacePiece(square: (Int, Int), value: Option[Piece]): GridImpl
+
+  def moveFromSelectedSquare(destSquare: (Int, Int)): GridImpl
+  def executeMove(row: Int, col: Int): GridImpl
+  def replaceSelectedSquare(square: (Int, Int)): GridImpl
+  def resetSelectedSquare(): GridImpl
+  def squareIsSelected(): Boolean
+
+  def setTurnStatus(turnStatus: TurnStatus): GridImpl
+  def nextTurn(): GridImpl
+
+  def unhighlightAll(): GridImpl
+  def highlightSquares(squares: List[Square]): GridImpl
+  
+  def getPieceForColumn(row: Int, col: Int, pieceColor: PieceColor): Piece
 }
 
-trait CellInterface {
-  def value: Option[PieceInterface]
-  def isHighlighted: Boolean
-  def isWhite: Boolean
+trait SquareInterface {
   def isSet: Boolean
+
+  def replaceValue(value: Option[Piece]): Square
+  def replaceColor(color: CellColor): Square
+
+  def isOpposingPiece(piece: Piece): Boolean
+
+  def highlight(): Square
+  def unHighlight(): Square
 }

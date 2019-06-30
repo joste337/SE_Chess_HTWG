@@ -2,7 +2,7 @@ package de.htwg.se.SE_Chess_HTWG.model.gridComponent
 
 import com.google.inject.Guice
 import de.htwg.se.SE_Chess_HTWG.ChessModule
-import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{Piece, PieceFactory, Rook}
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.{PieceColor, PieceFactory, PieceType, Rook}
 import org.scalatest._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -13,12 +13,12 @@ class CellSpec extends WordSpec with Matchers {
   val pieceFactory: PieceFactory = injector.getInstance(classOf[PieceFactory])
 
   "A Cell" when { "new with white and no piece" should {
-    val cell = Cell(None, true, false)
+    val cell = Square(None, 1, 1, CellColor.WHITE).highlight()
     "not be set" in {
       cell.isSet should be(false)
     }
-    "be white in"  in {
-      cell.isWhite should be(true)
+    "be highlighted"  in {
+      cell.highlighhted should be(true)
     }
     "have the right string representation of the square" in {
       cell.toString should be("\u25af")
@@ -26,12 +26,12 @@ class CellSpec extends WordSpec with Matchers {
   }}
 
   "A Cell" when { "new with black and no piece" should {
-    val cell = Cell(None, false, false)
+    val cell = Square(None, 1, 1, CellColor.BLACK)
     "not be set" in {
       cell.isSet should be(false)
     }
-    "be white in"  in {
-      cell.isWhite should be(false)
+    "not be highlighted"  in {
+      cell.highlighhted should be(false)
     }
     "have the right string representation of the square" in {
       cell.toString should be("\u25ae")
@@ -39,15 +39,13 @@ class CellSpec extends WordSpec with Matchers {
   }}
 
   "A Cell" when { "new with black and a rook" should {
-    val cell = Cell(Some(pieceFactory.getPiece(Piece.ROOK, true, 1, 1, false)), false, false)
+    var cell = Square(None, 1, 1, CellColor.BLACK)
+    cell = cell.replaceValue(Some(pieceFactory.getPiece(PieceType.ROOK, PieceColor.BLACK, cell)))
     "be set" in {
       cell.isSet should be(true)
     }
-    "be black in"  in {
-      cell.isWhite should be(false)
-    }
     "have the right string representation of the piece" in {
-      cell.toString should be("\u2656")
+      cell.toString should be("\u265C")
     }
   }}
 }

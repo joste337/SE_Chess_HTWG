@@ -1,42 +1,31 @@
 package de.htwg.se.SE_Chess_HTWG.aView.gui
 
-import java.io.PrintWriter
-
-import scala.swing.{Color, _}
+import scala.swing. _
 import scala.swing.Swing.LineBorder
 import scala.swing.event._
-import de.htwg.se.SE_Chess_HTWG.controller.{CellChanged, ControllerInterface, GameStatus}
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent._
+import de.htwg.se.SE_Chess_HTWG.controller.{CellChanged, ControllerInterface}
 import java.awt.Color
-
-import javax.swing.JFrame
-
-import scala.io.Source
 
 class CellClicked(val row: Int, val column: Int) extends Event
 
 class SwingGui (controller: ControllerInterface) extends Frame with Reactor{
 
-  peer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+  //peer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
 
   listenTo(controller)
   title = "SE Chess HTWG"
 
   menuBar = new MenuBar {
     contents += new Menu("File    ") {
-      contents += new MenuItem(Action("New") {
-        newGame
-      })
-      contents += new MenuItem(Action("Open") {
-        openFile
-      })
-      contents += new MenuItem(Action("Save") {
-        saveFile
-      })
+      contents += new MenuItem(Action("New") { newGame() })
       contents += new Separator()
-      contents += new MenuItem(Action("Exit") {
-        sys.exit(0)
-      })
+      contents += new MenuItem(Action("Undo") { undo() })
+      contents += new MenuItem(Action("Redo") { redo() })
+      contents += new Separator()
+      contents += new MenuItem(Action("Load") { openFile() })
+      contents += new MenuItem(Action("Save") { saveFile() })
+      contents += new Separator()
+      contents += new MenuItem(Action("Exit") { sys.exit(0) })
     }
     visible = true
   }
@@ -72,13 +61,13 @@ class SwingGui (controller: ControllerInterface) extends Frame with Reactor{
   centerOnScreen()
   this.visible = true
 
-  def newGame: Unit = {
-    controller.createNewGrid
-  }
+  def newGame(): Unit = controller.createNewGrid
 
-  def openFile: Unit =  controller.load
+  def undo(): Unit = controller.undo()
+  def redo(): Unit = controller.redo()
 
-  def saveFile: Unit = controller.save
+  def openFile(): Unit =  controller.load()
+  def saveFile(): Unit = controller.save()
 
   def redraw: Unit = {
     for {

@@ -2,7 +2,7 @@ package de.htwg.se.SE_Chess_HTWG.testUtil
 
 import com.google.inject.Guice
 import de.htwg.se.SE_Chess_HTWG.ChessModule
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridImpl, GridInterface, Matrix}
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.GridInterface
 import de.htwg.se.SE_Chess_HTWG.model.pieceComponent._
 
 object TestGrid {
@@ -22,20 +22,11 @@ object TestGrid {
   val pieceFactory: PieceFactory = injector.getInstance(classOf[PieceFactory])
 
   def getTestGrid: GridInterface = {
-    var cells: Matrix = new Matrix
-    for {
-      row <- 0 until 8
-      col <- 0 until 8
-    } if ((row + col) % 2 != 0) cells = cells.replaceCell(row, col, Cell(None, true))
-    grid.setCells(cells)
-
-    grid.setCells(grid.replaceValue(1, 0, Some(pieceFactory.getPiece(Piece.PAWN, true, 1, 0, false))))
-    grid.setCells(grid.replaceValue(1, 7, Some(pieceFactory.getPiece(Piece.QUEEN,true, 1, 7, true))))
-    grid.setCells(grid.replaceValue(2, 6, Some(pieceFactory.getPiece(Piece.ROOK,true, 2, 6, true))))
-    grid.setCells(grid.replaceValue(3, 5, Some(pieceFactory.getPiece(Piece.KING,true, 3, 5, true))))
-    grid.setCells(grid.replaceValue(6, 1, Some(pieceFactory.getPiece(Piece.BISHOP,true, 6, 1, true))))
-    grid.setCells(grid.replaceValue(5, 3, Some(pieceFactory.getPiece(Piece.KNIGHT,true, 5, 3, true))))
-
-    grid
+    grid.replacePiece(1, 0, Some(pieceFactory.getPiece(PieceType.PAWN, PieceColor.BLACK, grid.getCell(1, 0))))
+      .replacePiece(1, 7, Some(pieceFactory.getPiece(PieceType.QUEEN,PieceColor.BLACK, grid.getCell(1, 7))))
+      .replacePiece(2, 6, Some(pieceFactory.getPiece(PieceType.ROOK, PieceColor.BLACK, grid.getCell(2, 6))))
+      .replacePiece(3, 5, Some(pieceFactory.getPiece(PieceType.KING, PieceColor.BLACK, grid.getCell(3, 5))))
+      .replacePiece(6, 1, Some(pieceFactory.getPiece(PieceType.BISHOP, PieceColor.BLACK, grid.getCell(6, 1))))
+      .replacePiece(5, 3, Some(pieceFactory.getPiece(PieceType.KNIGHT, PieceColor.BLACK, grid.getCell(5, 3))))
   }
 }

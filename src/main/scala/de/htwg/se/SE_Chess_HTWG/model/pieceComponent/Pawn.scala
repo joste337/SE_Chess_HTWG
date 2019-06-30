@@ -1,68 +1,51 @@
 package de.htwg.se.SE_Chess_HTWG.model.pieceComponent
 
-import de.htwg.se.SE_Chess_HTWG.model.movement.Move
-import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{Cell, GridInterface}
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult
-import de.htwg.se.SE_Chess_HTWG.util.MovementResult.MovementResult
+import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{GridInterface, Square, TurnStatus}
+import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
 
-private[pieceComponent] class Pawn(val isWhite: Boolean, var row: Int, var col: Int, var hasMoved: Boolean = false) extends PieceInterface {
-  override def toString: String = if (isWhite) "\u2659" else "\u265F"
-  override def toSimpleString: String = "P"
-  val imageName = if (isWhite) "pawn_w" else "pawn_b"
+private[pieceComponent] case class Pawn(color: PieceColor, hasMoved: Boolean = false, square: Square) extends Piece {
+  override def copy(color: PieceColor, hasMoved: Boolean, square: Square): Pawn = Pawn(color, hasMoved, square)
+  override def toString: String = if (color == PieceColor.WHITE) "\u2659" else "\u265F"
+  override def toShortcut: String = "P"
+  override def getImageName: String = if (color == PieceColor.WHITE) "pawn_w" else "pawn_b"
 
-  def executeMove(grid: GridInterface, move: Move): MovementResult = {
-    if (getEnPassantMove(grid) == move.getToCell) {
-      doEnPassantMove(grid, move)
-    } else if (getFirstTwoSquareMove(grid) == move.getToCell) {
-      doFirstTwoSquaresMove(grid, move)
-    } else if (getPossibleSquares(grid) contains move.getToCell) {
-      grid.promotionSquare = if (getPromotionMove(grid) == grid.getCell(move.toRow, move.toCol)) Some(grid.getCell(move.toRow, move.toCol)) else None
-      move.doMove()
-    } else {
-      MovementResult.ERROR
-    }
+  var isPromotionMove = false
+  val row = this.square.row
+  val col = this.square.col
+
+
+  def getPossibleMoves(grid: GridInterface, turnStatus: TurnStatus): List[Square] = {
+    val nextRow = if (this.color == PieceColor.WHITE) this.square.row + 1 else this.square.row - 1
+    getBaseSquares(grid)::getFirstTwoSquareMove(grid):::getEnPassantMove(grid):::getDiagonalCaptureMoves(grid, nextRow)
   }
 
-  def getPossibleSquares(grid: GridInterface): List[Cell] = {
-    val nextRow = if (isWhite) row + 1 else row -1
-    getBaseSquares(grid)::getFirstTwoSquareMove(grid)::getEnPassantMove(grid)::getDiagonalCaptureMoves(grid, nextRow)
-  }
-
-  def getBaseSquares(grid: GridInterface): Cell = {
+  def getBaseSquares(grid: GridInterface): Square = {
     val nextRow = if (isWhite) row + 1 else row -1
     grid.getCell(nextRow, col)
   }
 
-  def getDiagonalCaptureMoves(grid: GridInterface, nextRow: Int): List[Cell] = {
-    var possibleSquares: List[Cell] = Nil
-    if (col - 1 >= 0 && grid.getCell(nextRow, col - 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col - 1)::possibleSquares
-    if (col + 1 <= 7 && grid.getCell(nextRow, col + 1).isWhite != isWhite) possibleSquares = grid.getCell(nextRow, col + 1)::possibleSquares
+  def getDiagonalCaptureMoves(grid: GridInterface, nextRow: Int): List[Square] = {
+    var possibleSquares: List[Square] = Nil
+    if (col - 1 >= 0 && grid.getCell(nextRow, col - 1).isOpposingPiece(this)) possibleSquares = grid.getCell(nextRow, col - 1)::possibleSquares
+    if (col + 1 <= 7 && grid.getCell(nextRow, col + 1).isOpposingPiece(this)) possibleSquares = grid.getCell(nextRow, col + 1)::possibleSquares
     possibleSquares
   }
 
-  def getPromotionMove(grid: GridInterface): Cell = {
-    val endRow = if (isWhite) 7 else 0
-    if (getBaseSquares(grid).value.getOrElse(10) == endRow) getBaseSquares(grid) else null
+  //  def getPromotionMove(grid: GridImpl): Square = {
+  //    val endRow = if (isWhite) 7 else 0
+  //    if (getBaseSquares(grid).value.getOrElse(10) == endRow) getBaseSquares(grid) else null
+  //  }
+
+  def getEnPassantMove(grid: GridInterface): List[Square] = {
+    var possibleSquares: List[Square] = Nil
+    if (grid.specialSquares.enPassantSquare.isDefined) grid.getCell(grid.specialSquares.enPassantSquare.get._1, grid.specialSquares.enPassantSquare.get._2)::possibleSquares else Nil
   }
 
-  def getEnPassantMove(grid: GridInterface): Cell = {
-    if (grid.enPassantSquare.isDefined && grid.enPassantSquare.get.isSet) grid.enPassantSquare.get else null
-  }
-
-  def getFirstTwoSquareMove(grid: GridInterface): Cell = {
+  def getFirstTwoSquareMove(grid: GridInterface): List[Square] = {
+    var possibleSquares: List[Square] = Nil
     val nextNextRow = if (isWhite) row + 2 else row -2
     val nextRow = if (isWhite) row + 1 else row -1
-    if (!hasMoved && !grid.getCell(nextRow, col).isSet && !grid.getCell(nextNextRow, col).isSet) grid.getCell(nextNextRow, col) else null
-  }
 
-  def doEnPassantMove(grid: GridInterface, move: Move): MovementResult = {
-    grid.replaceValue(grid.enPassantSquare.get.value.get.row, grid.enPassantSquare.get.value.get.col, None)
-    move.doMove()
-  }
-
-  def doFirstTwoSquaresMove(grid: GridInterface, move: Move): MovementResult = {
-    move.doMove()
-    grid.enPassantSquare = Some(grid.getCell(col, if (isWhite) row - 1 else row + 1))
-    MovementResult.SUCCESS
+    if (!this.hasMoved && !grid.getCell(nextRow, col).isSet && !grid.getCell(nextNextRow, col).isSet) grid.getCell(nextNextRow, col)::possibleSquares else Nil
   }
 }
