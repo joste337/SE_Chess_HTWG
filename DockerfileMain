@@ -2,4 +2,4 @@ FROM zgwmike/akka-sbt
 WORKDIR /main
 EXPOSE 8080
 ADD . /main
-CMD sbt "runMain de.htwg.se.chess.Main"
+CMD sbt "runMain de.htwg.se.SE_Chess_HTWG.SE_Chess_HTWG"

@@ -19,6 +19,7 @@ class DaoMicroserviceServer(daoMicroservice: DaoMicroservice) {
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
   implicit val timeout: Timeout = 5.seconds
 
+  val dbMicroserviceHost: String = ConfigFactory.load().getString("dbMicroserviceHost")
   val dbMicroservicePort: Int = ConfigFactory.load().getInt("dbMicroservicePort")
   val daoActor: ActorRef = system.actorOf(Props(new DaoActor(daoMicroservice.database)), "daoActor")
 
@@ -57,7 +58,7 @@ class DaoMicroserviceServer(daoMicroservice: DaoMicroservice) {
     }
   }
 
-  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, "localhost", dbMicroservicePort)
+  val bindingFuture: Future[Http.ServerBinding] = Http().bindAndHandle(route, dbMicroserviceHost, dbMicroservicePort)
 
   def unbind(): Unit = {
     bindingFuture

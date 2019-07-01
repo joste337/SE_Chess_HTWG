@@ -2,8 +2,10 @@ package de.htwg.se.SE_Chess_HTWG.aView.web
 
 import akka.http.scaladsl.model._
 import akka.actor.{ActorSystem, Props}
+import akka.http.javadsl.model.ws.WebSocketRequest
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.model.Uri.{Path, Query}
 import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
@@ -21,7 +23,8 @@ class WebServer(controller: ControllerInterface) {
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
-  val dbMicroserviceUrl: String = "http://localhost:" + ConfigFactory.load().getInt("dbMicroservicePort")
+  val dbMicroserviceUrl: String = ConfigFactory.load().getString("dockerDbMicroServiceUrl") + ":" + ConfigFactory.load().getInt("dbMicroservicePort")
+  val mainServiceHost: String = ConfigFactory.load().getString("mainServiceHost")
   val mainServicePort: Int = ConfigFactory.load().getInt("mainServicePort")
   val controllerActor = system.actorOf(Props(new ControllerActor(controller)), "controllerActor")
 
@@ -121,7 +124,7 @@ class WebServer(controller: ControllerInterface) {
     }
   }
 
-  val bindingFuture = Http().bindAndHandle(route, "localhost", mainServicePort)
+  val bindingFuture = Http().bindAndHandle(route, mainServiceHost, mainServicePort)
 
   def unbind = {
     bindingFuture

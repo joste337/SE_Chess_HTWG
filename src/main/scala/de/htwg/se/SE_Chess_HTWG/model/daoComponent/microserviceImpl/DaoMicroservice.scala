@@ -4,7 +4,7 @@ import com.google.inject.{Guice, Injector}
 import de.htwg.se.SE_Chess_HTWG.ChessModule
 import de.htwg.se.SE_Chess_HTWG.model.daoComponent.DAOInterface
 
-object DaoMicroserviceMain {
+object DaoMicroservice {
   def main(args: Array[String]): Unit = {
     new DaoMicroserviceServer(new DaoMicroservice)
   }
