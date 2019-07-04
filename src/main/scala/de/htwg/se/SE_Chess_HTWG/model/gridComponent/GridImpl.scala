@@ -15,7 +15,7 @@ case class GridImpl @Inject()(cells: Matrix, specialSquares: SpecialSquares, tur
 
   override def createNewGrid: GridInterface = setUpPieces.setTurnStatus(TurnStatus(Turn.P1))
 
-  override def getSquare(square: (Int, Int)): Square = cells.getCell(square._1, square._2)
+  override def getSquare(square: (Int, Int)): Square = cells.getSquare(square._1, square._2)
 
   override def replacePiece(row: Int, col: Int, value: Option[Piece]): GridInterface = copy(cells.replaceValue(row, col, value))
   override def replacePiece(square: (Int, Int), value: Option[Piece]): GridInterface = copy(cells.replaceValue(square._1, square._2, value))

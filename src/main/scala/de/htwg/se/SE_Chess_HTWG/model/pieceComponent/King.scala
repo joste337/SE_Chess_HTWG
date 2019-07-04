@@ -4,7 +4,7 @@ import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{GridInterface, Square, Turn
 import de.htwg.se.SE_Chess_HTWG.model.moveComponent.MovementHelper
 import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
 
-private[pieceComponent] case class King(color: PieceColor, hasMoved: Boolean = false, square: Square) extends Piece {
+case class King(color: PieceColor, hasMoved: Boolean = false, square: Square) extends Piece {
   override def copy(color: PieceColor, hasMoved: Boolean, square: Square): Piece = King(color, hasMoved, square)
   override def toString: String = if (color == PieceColor.WHITE) "\u2654" else "\u265A"
   override def toShortcut: String = "K"
