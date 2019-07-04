@@ -18,15 +18,11 @@ class BasicSimulation extends Simulation{
       .exec(http("request_2")
         .get("/chess/select?row=1&col=1"))
       .exec(http("request_3")
-        .get("/chess/save"))
-      .exec(http("request_4")
         .get("/chess/select?row=2&col=1"))
-      .exec(http("request_5")
-        .get("/chess/load"))
-      .exec(http("request_0")
+      .exec(http("request_4")
         .get("/chess/view"))
 
   setUp(
-    scenario1.inject(atOnceUsers(1))
+    scenario1.inject(atOnceUsers(200))
   ).protocols(httpProtocol)
 }

@@ -13,11 +13,11 @@ class KingSpec extends WordSpec with Matchers {
   val col: Int = 5
 
   "A King on testgrid" when { "get available moves" should {
-    val king: Piece = testGrid.getCell(row, col).value.get
+    val king: Piece = testGrid.getSquare(row, col).value.get
     "contain all possible moves" in {
-      Set(testGrid.getCell(4, 4), testGrid.getCell(4, 6), testGrid.getCell(4, 5),
-        testGrid.getCell(2, 4), testGrid.getCell(2, 5), testGrid.getCell(3, 4),
-        testGrid.getCell(3, 6)
+      Set(testGrid.getSquare(4, 4), testGrid.getSquare(4, 6), testGrid.getSquare(4, 5),
+        testGrid.getSquare(2, 4), testGrid.getSquare(2, 5), testGrid.getSquare(3, 4),
+        testGrid.getSquare(3, 6)
       ).subsetOf(king.getPossibleMoves(testGrid, testGrid.turnStatus).toSet) should be(true)
     }
   }}

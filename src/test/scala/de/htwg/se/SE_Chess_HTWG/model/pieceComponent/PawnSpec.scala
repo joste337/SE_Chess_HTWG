@@ -13,9 +13,9 @@ class PawnSpec extends WordSpec with Matchers {
   val col: Int = 0
 
   "A Pawn on testgrid" when { "get available moves" should {
-    val pawn: Piece = testGrid.getCell(row, col).value.get
+    val pawn: Piece = testGrid.getSquare(row, col).value.get
     "contain all possible moves" in {
-      Set(testGrid.getCell(0, 0)
+      Set(testGrid.getSquare(0, 0)
       ).subsetOf(pawn.getPossibleMoves(testGrid, testGrid.turnStatus).toSet) should be(true)
     }
   }}

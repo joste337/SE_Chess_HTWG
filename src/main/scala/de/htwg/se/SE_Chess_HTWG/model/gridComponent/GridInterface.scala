@@ -9,24 +9,24 @@ trait GridInterface {
   val specialSquares: SpecialSquares
   val turnStatus: TurnStatus
 
-  def createNewGrid: GridImpl
+  def createNewGrid: GridInterface
 
-  def getCell(square: (Int, Int)): Square
+  def getSquare(square: (Int, Int)): Square
 
-  def replacePiece(row: Int, col: Int, value: Option[Piece]): GridImpl
-  def replacePiece(square: (Int, Int), value: Option[Piece]): GridImpl
+  def replacePiece(row: Int, col: Int, value: Option[Piece]): GridInterface
+  def replacePiece(square: (Int, Int), value: Option[Piece]): GridInterface
 
-  def moveFromSelectedSquare(destSquare: (Int, Int)): GridImpl
-  def executeMove(row: Int, col: Int): GridImpl
-  def replaceSelectedSquare(square: (Int, Int)): GridImpl
-  def resetSelectedSquare(): GridImpl
+  def moveFromSelectedSquare(destSquare: (Int, Int)): GridInterface
+  def executeMove(row: Int, col: Int): GridInterface
+  def replaceSelectedSquare(square: (Int, Int)): GridInterface
+  def resetSelectedSquare(): GridInterface
   def squareIsSelected(): Boolean
 
-  def setTurnStatus(turnStatus: TurnStatus): GridImpl
-  def nextTurn(): GridImpl
+  def setTurnStatus(turnStatus: TurnStatus): GridInterface
+  def nextTurn(): GridInterface
 
-  def unhighlightAll(): GridImpl
-  def highlightSquares(squares: List[Square]): GridImpl
+  def unhighlightAll(): GridInterface
+  def highlightSquares(squares: List[Square]): GridInterface
   
   def getPieceForColumn(row: Int, col: Int, pieceColor: PieceColor): Piece
 }

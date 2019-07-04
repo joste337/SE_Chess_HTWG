@@ -2,6 +2,7 @@ package de.htwg.se.SE_Chess_HTWG.controller
 
 import de.htwg.se.SE_Chess_HTWG.model.gridComponent.{GridInterface, Square}
 
+import scala.concurrent.Future
 import scala.swing.Publisher
 
 trait ControllerInterface extends Publisher {
@@ -18,8 +19,8 @@ trait ControllerInterface extends Publisher {
   def save(): Unit
   def load(): Unit
 
-  def dbCreate(): Unit
+  def dbCreate(): Future[Unit]
   def dbRead(id: Int): Unit
-  def dbUpdate(id: Int): Unit
-  def dbDelete(id: Int): Unit
+  def dbUpdate(id: Int): Future[Boolean]
+  def dbDelete(id: Int): Future[Boolean]
 }

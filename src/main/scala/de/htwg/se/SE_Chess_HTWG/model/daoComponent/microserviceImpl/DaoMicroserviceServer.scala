@@ -25,7 +25,7 @@ class DaoMicroserviceServer(daoMicroservice: DaoMicroservice) {
 
   val route: Route = {
     path("db" / "create") {
-      put {
+      post {
         parameter("gridJson".as[String]) { gridJson =>
           daoActor ! (Create, gridJson)
           complete((StatusCodes.Accepted, "Created"))
@@ -49,7 +49,7 @@ class DaoMicroserviceServer(daoMicroservice: DaoMicroservice) {
       }
     }~
     path("db" / "delete") {
-      put {
+      delete {
         parameter("id".as[Int]) { id =>
           val result: Future[Boolean] = (daoActor ? (Delete, id)).mapTo[Boolean]
           complete((StatusCodes.Accepted, "Deleting: " + result))

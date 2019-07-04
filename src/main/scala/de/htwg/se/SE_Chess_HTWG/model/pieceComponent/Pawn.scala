@@ -21,13 +21,13 @@ private[pieceComponent] case class Pawn(color: PieceColor, hasMoved: Boolean = f
 
   def getBaseSquares(grid: GridInterface): Square = {
     val nextRow = if (isWhite) row + 1 else row -1
-    grid.getCell(nextRow, col)
+    grid.getSquare(nextRow, col)
   }
 
   def getDiagonalCaptureMoves(grid: GridInterface, nextRow: Int): List[Square] = {
     var possibleSquares: List[Square] = Nil
-    if (col - 1 >= 0 && grid.getCell(nextRow, col - 1).isOpposingPiece(this)) possibleSquares = grid.getCell(nextRow, col - 1)::possibleSquares
-    if (col + 1 <= 7 && grid.getCell(nextRow, col + 1).isOpposingPiece(this)) possibleSquares = grid.getCell(nextRow, col + 1)::possibleSquares
+    if (col - 1 >= 0 && grid.getSquare(nextRow, col - 1).isOpposingPiece(this)) possibleSquares = grid.getSquare(nextRow, col - 1)::possibleSquares
+    if (col + 1 <= 7 && grid.getSquare(nextRow, col + 1).isOpposingPiece(this)) possibleSquares = grid.getSquare(nextRow, col + 1)::possibleSquares
     possibleSquares
   }
 
@@ -38,7 +38,7 @@ private[pieceComponent] case class Pawn(color: PieceColor, hasMoved: Boolean = f
 
   def getEnPassantMove(grid: GridInterface): List[Square] = {
     var possibleSquares: List[Square] = Nil
-    if (grid.specialSquares.enPassantSquare.isDefined) grid.getCell(grid.specialSquares.enPassantSquare.get._1, grid.specialSquares.enPassantSquare.get._2)::possibleSquares else Nil
+    if (grid.specialSquares.enPassantSquare.isDefined) grid.getSquare(grid.specialSquares.enPassantSquare.get._1, grid.specialSquares.enPassantSquare.get._2)::possibleSquares else Nil
   }
 
   def getFirstTwoSquareMove(grid: GridInterface): List[Square] = {
@@ -46,6 +46,6 @@ private[pieceComponent] case class Pawn(color: PieceColor, hasMoved: Boolean = f
     val nextNextRow = if (isWhite) row + 2 else row -2
     val nextRow = if (isWhite) row + 1 else row -1
 
-    if (!this.hasMoved && !grid.getCell(nextRow, col).isSet && !grid.getCell(nextNextRow, col).isSet) grid.getCell(nextNextRow, col)::possibleSquares else Nil
+    if (!this.hasMoved && !grid.getSquare(nextRow, col).isSet && !grid.getSquare(nextNextRow, col).isSet) grid.getSquare(nextNextRow, col)::possibleSquares else Nil
   }
 }

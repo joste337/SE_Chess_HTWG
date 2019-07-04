@@ -18,9 +18,11 @@ class DAOMongoDb extends DAOInterface {
   val database: MongoDatabase = mongoClient.getDatabase("grids").withCodecRegistry(codecRegistry)
   val collection: MongoCollection[Grid] = database.getCollection("grid")
 
-  override def create(gridJson: String): Unit = Await.result(collection.insertOne(Grid(getSavedGridCount + 1, gridJson)).toFuture(), Duration.Inf)
+  override def create(gridJson: String): Unit = Await.result(collection.insertOne(Grid(getSavedGridCount + 1, gridJson))
+    .toFuture(), Duration.Inf)
 
-  override def read(id: Int): String = Await.result(collection.find(equal("_id", id)).first().toFuture(), Duration.Inf).get()._2
+  override def read(id: Int): String = Await.result(collection.find(equal("_id", id)).first()
+    .toFuture(), Duration.Inf).get()._2
 
   override def update(id: Int, gridJson: String): Boolean = {
     val filter = Document("_id" -> id)
@@ -29,7 +31,8 @@ class DAOMongoDb extends DAOInterface {
     Await.result(collection.updateOne(filter, mod).toFuture(), Duration.Inf).wasAcknowledged()
   }
 
-  override def delete(id: Int): Boolean = Await.result(collection.deleteOne(equal("_id", id)).toFuture(), Duration.Inf).wasAcknowledged()
+  override def delete(id: Int): Boolean = Await.result(collection.deleteOne(equal("_id", id))
+    .toFuture(), Duration.Inf).wasAcknowledged()
 
   def getSavedGridCount: Int = Await.result(collection.find().toFuture(),Duration.Inf).toList.map(grid => grid.get()).size
 }

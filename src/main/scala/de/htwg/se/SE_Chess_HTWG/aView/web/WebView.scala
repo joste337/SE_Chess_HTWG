@@ -2,10 +2,8 @@ package de.htwg.se.SE_Chess_HTWG.aView.web
 
 import akka.http.scaladsl.model._
 import akka.actor.{ActorSystem, Props}
-import akka.http.javadsl.model.ws.WebSocketRequest
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.model.Uri.{Path, Query}
 import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
@@ -18,12 +16,12 @@ import play.api.libs.json.Json
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
-class WebServer(controller: ControllerInterface) {
+class WebView(controller: ControllerInterface) {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
 
-  val dbMicroserviceUrl: String = ConfigFactory.load().getString("dockerDbMicroServiceUrl") + ":" + ConfigFactory.load().getInt("dbMicroservicePort")
+  val dbMicroserviceUrl: String = ConfigFactory.load().getString("dockerDbMicroServiceUrl")
   val mainServiceHost: String = ConfigFactory.load().getString("mainServiceHost")
   val mainServicePort: Int = ConfigFactory.load().getInt("mainServicePort")
   val controllerActor = system.actorOf(Props(new ControllerActor(controller)), "controllerActor")
@@ -63,7 +61,7 @@ class WebServer(controller: ControllerInterface) {
       }
     }~
     path("chess" / "create") {
-      get {
+      post {
         controller.dbCreate()
         complete((StatusCodes.Accepted, "Created new entry.\n"))
       }
@@ -79,13 +77,17 @@ class WebServer(controller: ControllerInterface) {
     path("chess" / "update") {
       put {
         parameter("id".as[Int]) { id =>
-          controller.dbUpdate(id)
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<pre>" + controller.gridString + "</pre>"))
+          val success: Boolean = Await.result(controller.dbUpdate(id), 1 second)
+          if (success) {
+            complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "Database updated successfully."))
+          } else {
+            complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "Database couldn't be updated."))
+          }
         }
       }
     }~
     path("chess" / "delete") {
-      put {
+      delete {
         parameter("id".as[Int]) { id =>
           controller.dbDelete(id)
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<pre>" + controller.gridString  + "</pre>"))
@@ -93,15 +95,17 @@ class WebServer(controller: ControllerInterface) {
       }
     }~
     path("chess" / "dbMicroservice" / "create") {
-      get {
-        val result = scalaj.http.Http(dbMicroserviceUrl + "/db/create").method("put").param("gridJson", Json.prettyPrint(GridGenerator.gridToJson(controller.grid))).asString.body
+      post {
+        val result = scalaj.http.Http(dbMicroserviceUrl + "/db/create").method("post")
+          .param("gridJson", Json.prettyPrint(GridGenerator.gridToJson(controller.grid))).asString.body
         complete((StatusCodes.Accepted, "<pre>" + result + "</pre>"))
       }
     }~
     path("chess" / "dbMicroservice" / "read") {
       get {
         parameter("id".as[Int]) { id =>
-          controller.grid = GridGenerator.gridFromJson(scalaj.http.Http(dbMicroserviceUrl + "/db/read").method("get").param("id", id.toString).asString.body)
+          controller.grid = GridGenerator.gridFromJson(scalaj.http.Http(dbMicroserviceUrl + "/db/read").method("get")
+            .param("id", id.toString).asString.body)
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<pre>" + controller.gridString + "</pre>"))
         }
       }
@@ -115,9 +119,9 @@ class WebServer(controller: ControllerInterface) {
       }
     }~
     path("chess" / "dbMicroservice" / "delete") {
-      put {
+      delete {
         parameter("id".as[Int]) { id =>
-          val result = scalaj.http.Http(dbMicroserviceUrl + "/db/delete").method("put").param("id", id.toString).asString.body
+          val result = scalaj.http.Http(dbMicroserviceUrl + "/db/delete").method("delete").param("id", id.toString).asString.body
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<pre>" + result  + "</pre>"))
         }
       }

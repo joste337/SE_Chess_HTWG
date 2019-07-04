@@ -6,7 +6,7 @@ import de.htwg.se.SE_Chess_HTWG.model.pieceComponent.PieceColor.PieceColor
 
 object MovementHelper {
   def getSquaresInGrid(grid: GridInterface, squareList: List[(Int, Int)], pieceColor: PieceColor): List[Square] = {
-    squareList.filter(squareIsInGrid).map(square => grid.getCell(square._1, square._2))
+    squareList.filter(squareIsInGrid).map(square => grid.getSquare(square._1, square._2))
   }
 
   def getSquaresUntilColliding(grid: GridInterface, squareList: List[(Int, Int)], pieceColor: PieceColor): List[Square] = {
@@ -14,8 +14,8 @@ object MovementHelper {
   }
 
   def squareIsOfOwnColor(grid: GridInterface, square: Square, pieceColor: PieceColor): Boolean = {
-    !grid.getCell(square.row, square.col).isSet ||
-      grid.getCell(square.row, square.col).isSet && grid.getCell(square.row, square.col).value.get.color != pieceColor
+    !grid.getSquare(square.row, square.col).isSet ||
+      grid.getSquare(square.row, square.col).isSet && grid.getSquare(square.row, square.col).value.get.color != pieceColor
   }
 
   def squareIsInGrid(square: (Int, Int)): Boolean = square._1 >= 0 && square._1 <= 7 && square._2 >= 0 && square._2 <= 7
@@ -26,7 +26,7 @@ object MovementHelper {
     var i: Int = 0
 
     while(i < squareList.size && !foundPiece) {
-      val cell = grid.getCell(squareList(i).row, squareList(i).col)
+      val cell = grid.getSquare(squareList(i).row, squareList(i).col)
       possibleMovementOptionsList = cell::possibleMovementOptionsList
       if (cell.isSet) foundPiece = true
       i = i + 1

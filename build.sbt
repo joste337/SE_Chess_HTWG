@@ -21,5 +21,6 @@ libraryDependencies ++= Seq(
   "com.h2database" % "h2" % "1.4.199",
   "org.mongodb.scala" %% "mongo-scala-driver" % "2.6.0",
   "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.3.0" % "test",
-  "io.gatling" % "gatling-test-framework"    % "2.3.0" % "test"
+  "io.gatling" % "gatling-test-framework"    % "2.3.0" % "test",
+  "org.slf4j" % "slf4j-api" % "1.7.5",
 )

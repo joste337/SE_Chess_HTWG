@@ -13,12 +13,12 @@ class KnightSpec extends WordSpec with Matchers {
   val col: Int = 3
 
   "A Knight on testgrid" when { "get available moves" should {
-    val knight: Piece = testGrid.getCell(row, col).value.get
+    val knight: Piece = testGrid.getSquare(row, col).value.get
     println("AAAAAAAAAAAA " + knight.getPossibleMoves(testGrid, testGrid.turnStatus).foreach(cell => println(cell.row + " , " + cell.col)))
     "contain all possible moves" in {
-      Set(testGrid.getCell(7, 4), testGrid.getCell(7, 2), testGrid.getCell(3, 4),
-        testGrid.getCell(3, 2), testGrid.getCell(6, 5), testGrid.getCell(4, 5),
-        testGrid.getCell(4, 1)
+      Set(testGrid.getSquare(7, 4), testGrid.getSquare(7, 2), testGrid.getSquare(3, 4),
+        testGrid.getSquare(3, 2), testGrid.getSquare(6, 5), testGrid.getSquare(4, 5),
+        testGrid.getSquare(4, 1)
       ).subsetOf(knight.getPossibleMoves(testGrid, testGrid.turnStatus).toSet) should be(true)
     }
   }}

@@ -21,7 +21,7 @@ object GridGenerator {
       val value = (gridJson \\ "value") (i).as[String]
       val pieceColor = if ((gridJson \\ "isWhite") (i).as[Boolean]) PieceColor.WHITE else PieceColor.BLACK
       val hasMoved = (gridJson \\ "hasMoved") (i).as[Boolean]
-      grid = grid.replacePiece(row, col, Some(pieceFactory.getPiece(pieceFactory.getPieceTypeFromString(value), pieceColor, grid.getCell(row, col), hasMoved)))
+      grid = grid.replacePiece(row, col, Some(pieceFactory.getPiece(pieceFactory.getPieceTypeFromString(value), pieceColor, grid.getSquare(row, col), hasMoved)))
     }
     grid
   }

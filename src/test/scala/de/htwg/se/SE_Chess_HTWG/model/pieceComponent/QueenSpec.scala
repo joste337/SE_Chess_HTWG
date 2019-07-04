@@ -23,13 +23,13 @@ class QueenSpec extends WordSpec with Matchers {
   val col: Int = 7
 
   "A Queen on testgrid" when { "get available moves" should {
-    val queen: Piece = testGrid.getCell(row, col).value.get
+    val queen: Piece = testGrid.getSquare(row, col).value.get
     "contain all possible moves" in {
-      Set(testGrid.getCell(0, 7), testGrid.getCell(1, 1), testGrid.getCell(1, 2),
-        testGrid.getCell(1, 3), testGrid.getCell(1, 4), testGrid.getCell(1, 5),
-        testGrid.getCell(1, 6), testGrid.getCell(2, 7), testGrid.getCell(3, 7),
-        testGrid.getCell(4, 7), testGrid.getCell(5, 7), testGrid.getCell(6, 7),
-        testGrid.getCell(7, 7)
+      Set(testGrid.getSquare(0, 7), testGrid.getSquare(1, 1), testGrid.getSquare(1, 2),
+        testGrid.getSquare(1, 3), testGrid.getSquare(1, 4), testGrid.getSquare(1, 5),
+        testGrid.getSquare(1, 6), testGrid.getSquare(2, 7), testGrid.getSquare(3, 7),
+        testGrid.getSquare(4, 7), testGrid.getSquare(5, 7), testGrid.getSquare(6, 7),
+        testGrid.getSquare(7, 7)
       ).subsetOf(queen.getPossibleMoves(testGrid, testGrid.turnStatus).toSet) should be(true)
     }
   }}

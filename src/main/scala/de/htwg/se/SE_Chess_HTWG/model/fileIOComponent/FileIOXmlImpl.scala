@@ -29,7 +29,7 @@ class FileIOXmlImpl {
 //      val value: String = piece.text.trim
 //      val isWhite: Boolean = (piece \ "@isWhite").text.toBoolean
 //      val hasMoved: Boolean = (piece \ "@hasMoved").text.toBoolean
-//      grid.getCell(row, col).value = Some(pieceFactory.getPiece(Piece.getPieceTypeFromString(value), isWhite, row, col, hasMoved))
+//      grid.getSquare(row, col).value = Some(pieceFactory.getPiece(Piece.getPieceTypeFromString(value), isWhite, row, col, hasMoved))
 //    }
 //
 //    (grid, gameStatus)
